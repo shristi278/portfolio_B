@@ -1,10 +1,25 @@
+import { useEffect, useState } from "react";
 import { FloatingHero } from "./FloatingHero";
 import { glances, projects, quotes, resumeUrl, skills } from "./data";
 
 export default function App() {
+  const [scrolled, setScrolled] = useState(false);
+  const [workHover, setWorkHover] = useState(false);
+
+  useEffect(() => {
+    const onScroll = () => {
+      const hero = document.querySelector(".hero");
+      const offset = (hero instanceof HTMLElement ? hero.offsetHeight : 480) - 72;
+      setScrolled(window.scrollY > offset);
+    };
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
   return (
     <>
-      <header className="nav">
+      <header className={scrolled ? "nav scrolled" : "nav"}>
         <a className="mark" href="#top">
           Shristi Suman
         </a>
@@ -27,30 +42,49 @@ export default function App() {
 
       <main id="top">
         <section className="hero">
-          <div className="blobs" aria-hidden="true">
-            <span className="blob blob-a" />
-            <span className="blob blob-b" />
-          </div>
           <div className="hero-grid">
             <div className="hero-copy">
-              <p className="eyebrow">Senior product designer · Bangalore</p>
+              <p className="eyebrow">Senior product designer</p>
               <h1>
-                From Chaos
-                <br />
-                to Clarity
+                <span className="line">From Chaos</span>
+                <span className="line">
+                  to <span className="accent">Clarity</span>
+                </span>
               </h1>
               <p className="lede">
                 Driven by curiosity <span className="dot">|</span> Grounded by
                 process <span className="dot">|</span> Guided by users
               </p>
-              <a className="cta cta-lg" href="#work">
+              <a
+                className="cta cta-lg"
+                href="#work"
+                onMouseEnter={() => setWorkHover(true)}
+                onMouseLeave={() => setWorkHover(false)}
+              >
                 See the work
                 <span aria-hidden="true">→</span>
               </a>
             </div>
-            <FloatingHero />
+            <FloatingHero workHover={workHover} />
           </div>
-          <p className="aside">8°–37° N, 68°–97° E</p>
+          <div className="meta" id="about">
+            <div>
+              <span>Location</span>
+              <strong>Bangalore, India</strong>
+            </div>
+            <div>
+              <span>Experience</span>
+              <strong>4.5+ years</strong>
+            </div>
+            <div>
+              <span>Currently at</span>
+              <strong>SOTI Inc.</strong>
+            </div>
+            <div>
+              <span>Previously</span>
+              <strong>Unthinkable, Betterplace</strong>
+            </div>
+          </div>
           <svg
             className="wave"
             viewBox="0 0 1440 80"
@@ -59,25 +93,6 @@ export default function App() {
           >
             <path d="M0,24 C240,80 480,0 720,32 C960,64 1200,8 1440,40 L1440,80 L0,80 Z" />
           </svg>
-        </section>
-
-        <section className="meta" id="about">
-          <div>
-            <span>Location</span>
-            <strong>Bangalore, India</strong>
-          </div>
-          <div>
-            <span>Role</span>
-            <strong>Senior product designer</strong>
-          </div>
-          <div>
-            <span>Currently at</span>
-            <strong>SOTI Inc.</strong>
-          </div>
-          <div>
-            <span>Previously</span>
-            <strong>Unthinkable, Betterplace</strong>
-          </div>
         </section>
 
         <section className="work" id="work">
