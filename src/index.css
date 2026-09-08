@@ -38,6 +38,38 @@
   font-display: swap;
 }
 
+@font-face {
+  font-family: "Fraktion Sans";
+  src: url("/fonts/FraktionSans-Regular.ttf") format("truetype");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Fraktion Sans";
+  src: url("/fonts/FraktionSans-RegularItalic.ttf") format("truetype");
+  font-weight: 400;
+  font-style: italic;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Fraktion Sans";
+  src: url("/fonts/FraktionSans-Medium.ttf") format("truetype");
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Fraktion Sans";
+  src: url("/fonts/FraktionSans-Bold.ttf") format("truetype");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
 :root,
 [data-theme="blue"] {
   --color-primary: #002180;
@@ -211,6 +243,17 @@ b {
   100% {
     transform: translateY(0) scale(1);
   }
+}
+
+.cta:disabled {
+  opacity: 0.38;
+  cursor: not-allowed;
+  transform: none;
+  filter: grayscale(0.2);
+  box-shadow:
+    inset 0 1px 0 color-mix(in srgb, white 38%, transparent),
+    0 3px 0 color-mix(in srgb, var(--color-secondary) 62%, black);
+  pointer-events: none;
 }
 
 .cta-lg {
@@ -394,6 +437,12 @@ b {
 .glance h2,
 .talk h2 {
   font-size: clamp(42px, 7vw, 84px);
+}
+
+.glance-card h3 {
+  font-family: Degular, Helvetica, Arial, sans-serif;
+  font-weight: 600;
+  letter-spacing: 0;
 }
 
 .hand {
@@ -671,7 +720,7 @@ b {
 .glance ul {
   list-style: none;
   margin: 28px 0 0;
-  padding: 8em 0 4em;
+  padding: 8em 0 6em;
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   column-gap: 24px;
@@ -682,8 +731,14 @@ b {
 
 .glance-item {
   --glance-y: 6em;
+  position: relative;
+  z-index: 1;
   transform: translate3d(0, var(--glance-y), 0);
   will-change: transform;
+}
+
+.glance-item:hover {
+  z-index: 2;
 }
 
 .glance-card {
@@ -704,7 +759,7 @@ b {
 }
 
 .glance-card:hover {
-  transform: rotateX(5deg) rotateY(-7deg);
+  transform: rotate(-2deg);
 }
 
 .glance-card.tone-1 {
@@ -765,19 +820,33 @@ b {
   z-index: 3;
   width: 3.5em;
   height: 3.5em;
+  padding: 0;
+  border: 0;
   border-radius: 999px;
   overflow: hidden;
   background: #fff;
   color: #161616;
   display: flex;
   transform: rotate(-45deg);
+  text-decoration: none;
+  cursor: pointer;
+  appearance: none;
+  font: inherit;
+}
+
+.glance-card-icon.is-source {
+  opacity: 0;
+  pointer-events: none;
 }
 
 .glance-card-icon-track {
   display: flex;
-  flex-direction: column;
-  width: 100%;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  width: 7em;
+  transform: translateX(-3.5em);
   transition: transform 0.45s cubic-bezier(0.22, 1, 0.32, 1);
+  pointer-events: none;
 }
 
 .glance-card-icon-face {
@@ -794,7 +863,7 @@ b {
 }
 
 .glance-card:hover .glance-card-icon-track {
-  transform: translateY(-3.5em);
+  transform: translateX(0);
 }
 
 .glance-card-content {
@@ -812,8 +881,9 @@ b {
 
 .glance-card h3 {
   font-size: clamp(20px, 1.7vw, 26px);
-  line-height: 1.05;
-  letter-spacing: 0.5px;
+  font-weight: 600;
+  line-height: 1.15;
+  letter-spacing: 0;
   color: var(--glance-ink);
 }
 
@@ -836,10 +906,245 @@ b {
   font-weight: 500;
 }
 
-.quotes {
+.glance-dialog-root {
+  position: fixed;
+  inset: 0;
+  z-index: 80;
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  place-items: center;
+  padding: 24px;
+  pointer-events: none;
+}
+
+.glance-dialog-backdrop {
+  position: absolute;
+  inset: 0;
+  border: 0;
+  padding: 0;
+  background: color-mix(in srgb, var(--color-primary) 62%, transparent);
+  opacity: 0;
+  cursor: pointer;
+  pointer-events: auto;
+  transition: opacity 0.45s ease;
+}
+
+.glance-dialog-root.is-open .glance-dialog-backdrop {
+  opacity: 1;
+}
+
+.glance-dialog {
+  position: fixed;
+  z-index: 1;
+  pointer-events: auto;
+  background: #fff;
+  color: #161616;
+  overflow: hidden;
+  transform-origin: center center;
+  will-change: left, top, width, height, border-radius;
+  box-shadow: 0 28px 80px color-mix(in srgb, black 28%, transparent);
+}
+
+.glance-dialog-close,
+.glance-dialog-step {
+  width: 48px;
+  height: 48px;
+  padding: 0;
+  justify-content: center;
+}
+
+.glance-dialog-close {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  z-index: 3;
+}
+
+.glance-dialog-close,
+.glance-dialog-nav {
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.22s ease;
+}
+
+.glance-dialog.is-ready .glance-dialog-close,
+.glance-dialog.is-ready .glance-dialog-nav {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.glance-dialog-close svg,
+.glance-dialog-step svg {
+  width: 14px;
+  height: 14px;
+}
+
+.glance-dialog-body {
+  display: grid;
+  grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr);
+  height: 100%;
+  min-width: 0;
+  overflow: hidden;
+  opacity: 0;
+  transition: opacity 0.28s ease;
+}
+
+.glance-dialog.is-ready .glance-dialog-body {
+  opacity: 1;
+}
+
+.glance-dialog-media {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 0;
+  min-height: 0;
+  height: 100%;
+  overflow: hidden;
+  background: color-mix(in srgb, var(--color-primary) 8%, #fff);
+}
+
+.glance-dialog-media.has-video {
+  background: #d9d9d9;
+}
+
+.glance-dialog-media.has-fit {
+  background: transparent;
+}
+
+.glance-dialog-media img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: cover;
+  object-position: center;
+}
+
+.glance-dialog-media.has-fit img {
+  width: auto;
+  height: auto;
+  object-fit: contain;
+  align-self: center;
+}
+
+.glance-dialog-media video {
+  display: block;
+  width: auto;
+  height: auto;
+  max-width: min(100%, 94%);
+  max-height: 94%;
+  object-fit: contain;
+  background: transparent;
+  border-radius: 8px;
+  box-shadow: 0 10px 28px color-mix(in srgb, black 22%, transparent);
+}
+
+.glance-dialog-copy {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
+  gap: 16px;
+  min-width: 0;
+  height: 100%;
+  padding: 28px 88px 28px 36px;
+}
+
+.glance-dialog-tag {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 0;
+  color: color-mix(in srgb, #161616 55%, transparent);
+}
+
+.glance-dialog-copy h2 {
+  margin: 0;
+  font-family: Degular, Helvetica, Arial, sans-serif;
+  font-weight: 700;
+  font-size: clamp(28px, 3.2vw, 44px);
+  line-height: 1.12;
+  letter-spacing: 0;
+  color: #161616;
+}
+
+.glance-dialog-copy p.glance-dialog-subhead {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 600;
+  line-height: 1.3;
+  letter-spacing: 0;
+  color: #161616;
+}
+
+.glance-dialog-copy p.glance-dialog-desc {
+  margin: 0;
+  max-width: 36ch;
+  font-size: 18px;
+  font-weight: 400;
+  line-height: 1.45;
+  letter-spacing: 0;
+  color: color-mix(in srgb, #161616 78%, transparent);
+}
+
+.glance-dialog-nav {
+  position: absolute;
+  right: 20px;
+  bottom: 22px;
+  z-index: 3;
+  display: flex;
+  gap: 10px;
+  margin: 0;
+}
+
+@media (max-width: 980px) {
+  .glance-dialog-body {
+    grid-template-columns: 1fr;
+    grid-template-rows: 38% 1fr;
+  }
+
+  .glance-dialog-copy {
+    padding: 24px 24px 88px;
+    justify-content: flex-start;
+  }
+
+  .glance-dialog-copy h2 {
+    font-size: clamp(24px, 7vw, 36px);
+  }
+}
+
+.words {
+  padding: 0;
+  height: 260vh;
+  overflow: clip;
+}
+
+.words-sticky {
+  position: sticky;
+  top: 0;
+  min-height: 100vh;
+  padding: 15vh 64px 40px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+}
+
+.words .section-head {
+  margin-bottom: 20px;
+}
+
+.quotes {
+  position: relative;
+  flex: 1;
+  min-height: 0;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: 18px;
+  align-items: stretch;
+  isolation: isolate;
 }
 
 blockquote {
@@ -847,6 +1152,105 @@ blockquote {
   border-radius: 28px;
   padding: 28px;
   transition: background-color 0.45s ease, color 0.45s ease;
+}
+
+.words .quote {
+  --qx: 100vw;
+  --qy: 0px;
+  --qrot: 0deg;
+  --quote-r: 28px;
+  --quote-fill: color-mix(in srgb, var(--color-secondary) 22%, var(--color-primary));
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  padding: 0;
+  border-radius: var(--quote-r);
+  background: var(--quote-fill);
+  transform: translate3d(var(--qx), var(--qy), 0) rotate(var(--qrot));
+  will-change: transform;
+}
+
+.words .quote-1 {
+  --quote-fill: color-mix(in srgb, var(--color-secondary) 22%, var(--color-primary));
+}
+
+.words .quote-2 {
+  --quote-fill: color-mix(in srgb, var(--color-contrast) 18%, var(--color-primary));
+}
+
+.quote-body {
+  position: relative;
+  flex: 1;
+  min-height: 0;
+  height: 100%;
+  padding: 28px 26px 16px;
+  border-radius: 0;
+  background: transparent;
+  transition: background-color 0.45s ease, color 0.45s ease;
+}
+
+.quote-mark {
+  display: block;
+  margin: 0 0 8px;
+  overflow: visible;
+  font-family: Champ, Helvetica, Arial, sans-serif;
+  font-size: 128px;
+  font-weight: 900;
+  line-height: 0.75;
+  color: color-mix(in srgb, var(--color-contrast) 42%, var(--quote-fill));
+}
+
+.quote-body p {
+  margin: 0;
+  font-size: clamp(17px, 1.35vw, 20px);
+  line-height: 1.5;
+}
+
+.quote-person {
+  position: relative;
+  left: auto;
+  bottom: auto;
+  z-index: 1;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  max-width: none;
+  margin-top: auto;
+  padding: 12px 26px 24px;
+  background: transparent;
+  border-top-right-radius: 0;
+  transition: none;
+}
+
+.quote-person img {
+  width: 64px;
+  height: 64px;
+  flex-shrink: 0;
+  object-fit: cover;
+  border-radius: 22px;
+  background: color-mix(in srgb, var(--color-secondary) 30%, var(--color-primary));
+}
+
+.quote-person div {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+  max-width: none;
+}
+
+.quote-person strong {
+  font-size: 24px;
+  line-height: 1.15;
+}
+
+.quote-person span {
+  font-size: 16px;
+  line-height: 1.3;
+  color: color-mix(in srgb, var(--color-contrast) 70%, var(--color-secondary));
 }
 
 .quote-1 {
@@ -865,6 +1269,10 @@ blockquote footer {
   display: flex;
   flex-direction: column;
   gap: 4px;
+}
+
+.words .quote-person {
+  flex-direction: row;
 }
 
 .talk {
@@ -1191,6 +1599,7 @@ blockquote footer {
 
   .glance ul {
     padding: 0;
+    column-gap: 24px;
     row-gap: 24px;
     perspective: none;
   }
@@ -1208,13 +1617,37 @@ blockquote footer {
   .card-copy {
     padding: 16px 4px 0;
   }
+
+  .words {
+    height: auto;
+    overflow: visible;
+    padding-top: 72px;
+    padding-bottom: 72px;
+  }
+
+  .words-sticky {
+    position: static;
+    min-height: 0;
+    padding: 0;
+  }
+
+  .words .quote {
+    --qx: 0px !important;
+    --qy: 0px !important;
+    --qrot: 0deg !important;
+    transform: none;
+    will-change: auto;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
   .ticker-track,
   .cta.is-popping,
   .glance-card-icon-track,
-  .glance-card {
+  .glance-card,
+  .glance-dialog,
+  .glance-dialog-backdrop,
+  .glance-dialog-body {
     animation: none;
     transition: none;
   }
@@ -1222,6 +1655,18 @@ blockquote footer {
   .glance-item {
     --glance-y: 0em !important;
     transform: none;
+  }
+
+  .words {
+    height: auto;
+  }
+
+  .words .quote {
+    --qx: 0px !important;
+    --qy: 0px !important;
+    --qrot: 0deg !important;
+    transform: none;
+    will-change: auto;
   }
 
   html,

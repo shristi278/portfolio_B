@@ -4,22 +4,39 @@ import { CtaLink } from "./CtaLink";
 import { FloatingHero } from "./FloatingHero";
 import { Layout } from "./Layout";
 import { Material3Study } from "./Material3Study";
+import { GlanceDialog, type GlanceOrigin } from "./GlanceDialog";
 import { glances, projects, quotes, skills } from "./data";
 import { usePath } from "./nav";
 
 function GlanceBoard() {
   const sectionRef = useRef<HTMLElement>(null);
+  const iconRefs = useRef<(HTMLButtonElement | null)[]>([]);
+  const [openIndex, setOpenIndex] = useState<number | null>(null);
+  const [origin, setOrigin] = useState<GlanceOrigin | null>(null);
+
+  function originOf(index: number): GlanceOrigin | null {
+    const el = iconRefs.current[index];
+    if (!el) return origin;
+    const box = el.getBoundingClientRect();
+    return { x: box.left, y: box.top, w: box.width, h: box.height };
+  }
+
+  function openAt(index: number, el: HTMLButtonElement) {
+    const box = el.getBoundingClientRect();
+    setOrigin({ x: box.left, y: box.top, w: box.width, h: box.height });
+    setOpenIndex(index);
+  }
 
   useEffect(() => {
     const section = sectionRef.current;
     if (!section) return;
-    const items = [...section.querySelectorAll<HTMLElement>(".glance-item")];
     const reduced = window.matchMedia("(prefers-reduced-motion: reduce)");
 
     const apply = () => {
+      const nodes = [...section.querySelectorAll<HTMLElement>(".glance-item")];
       const mobile = window.matchMedia("(max-width: 980px)").matches;
       if (mobile || reduced.matches) {
-        items.forEach((item) => item.style.setProperty("--glance-y", "0em"));
+        nodes.forEach((item) => item.style.setProperty("--glance-y", "0em"));
         return;
       }
       const rect = section.getBoundingClientRect();
@@ -30,9 +47,10 @@ function GlanceBoard() {
         1,
         Math.max(0, (start - rect.top) / (start - end || 1)),
       );
-      items.forEach((item, index) => {
+      const targets = [0, -12, -24];
+      nodes.forEach((item, index) => {
         const from = 6;
-        const to = [0, -12, -24][index % 3];
+        const to = targets[index % 3];
         item.style.setProperty("--glance-y", `${from + (to - from) * progress}em`);
       });
     };
@@ -55,10 +73,10 @@ function GlanceBoard() {
 
   return (
     <section className="glance" ref={sectionRef}>
-      <h2>/ Glance</h2>
+      <h2>Glance</h2>
       <ul>
         {glances.map((item, index) => (
-          <li key={item.year} className={`glance-item col-${(index % 3) + 1}`}>
+          <li key={item.href} className={`glance-item col-${(index % 3) + 1}`}>
             <article className={`glance-card tone-${index % 3}`}>
               <div className="glance-card-media">
                 <img src={item.image} alt={item.imageAlt} />
@@ -72,15 +90,29 @@ function GlanceBoard() {
                     />
                   </svg>
                 </div>
-                <span className="glance-card-icon" aria-hidden="true">
+                <button
+                  type="button"
+                  className={
+                    openIndex === index
+                      ? "glance-card-icon is-source"
+                      : "glance-card-icon"
+                  }
+                  ref={(node) => {
+                    iconRefs.current[index] = node;
+                  }}
+                  aria-label={`Open ${item.result}`}
+                  onClick={(event) => {
+                    event.stopPropagation();
+                    openAt(index, event.currentTarget);
+                  }}
+                >
                   <span className="glance-card-icon-track">
                     <GlanceArrow />
                     <GlanceArrow />
                   </span>
-                </span>
+                </button>
                 <div className="glance-card-content">
                   <h3>{item.result}</h3>
-                  <p>{item.text}</p>
                   <span className="glance-card-tag">{item.year}</span>
                 </div>
               </div>
@@ -88,6 +120,15 @@ function GlanceBoard() {
           </li>
         ))}
       </ul>
+      {openIndex !== null && origin ? (
+        <GlanceDialog
+          items={glances}
+          index={openIndex}
+          origin={originOf(openIndex) ?? origin}
+          onIndexChange={setOpenIndex}
+          onClose={() => setOpenIndex(null)}
+        />
+      ) : null}
     </section>
   );
 }
@@ -102,6 +143,124 @@ function GlanceArrow() {
         />
       </svg>
     </span>
+  );
+}
+
+function KindWords() {
+  const sectionRef = useRef<HTMLElement>(null);
+
+  useEffect(() => {
+    const section = sectionRef.current;
+    if (!section) return;
+    const reduced = window.matchMedia("(prefers-reduced-motion: reduce)");
+
+    const apply = () => {
+      const cards = [...section.querySelectorAll<HTMLElement>(".quote")];
+      const stage = section.querySelector<HTMLElement>(".quotes");
+      const mobile = window.matchMedia("(max-width: 980px)").matches;
+      if (!stage || mobile || reduced.matches) {
+        cards.forEach((card) => {
+          card.style.setProperty("--qx", "0px");
+          card.style.setProperty("--qy", "0px");
+          card.style.setProperty("--qrot", "0deg");
+        });
+        return;
+      }
+
+      const rect = section.getBoundingClientRect();
+      const travel = Math.max(1, section.offsetHeight - window.innerHeight);
+      const progress = Math.min(1, Math.max(0, -rect.top / travel));
+      const stageW = stage.offsetWidth;
+      const stageH = stage.offsetHeight;
+      const fromShift = window.innerWidth * 0.85;
+
+      cards.forEach((card, index) => {
+        const restLeft =
+          card.offsetParent === stage
+            ? card.offsetLeft
+            : card.offsetLeft - stage.offsetLeft;
+        const restTop =
+          card.offsetParent === stage
+            ? card.offsetTop
+            : card.offsetTop - stage.offsetTop;
+        const stackLeft = stageW * 0.72 + index * 28;
+        const stackTop =
+          Math.max(0, (stageH - card.offsetHeight) / 2) + (index - 1.5) * 14;
+        const stackX = stackLeft - restLeft;
+        const stackY = stackTop - restTop;
+        const stackRot = (index - 1.5) * 5.5;
+        const fromX = stackX + fromShift;
+        const fromY = stackY;
+        const fromRot = stackRot + 8;
+
+        let x: number;
+        let y: number;
+        let rot: number;
+        if (progress < 0.4) {
+          const t = progress / 0.4;
+          x = fromX + (stackX - fromX) * t;
+          y = fromY + (stackY - fromY) * t;
+          rot = fromRot + (stackRot - fromRot) * t;
+        } else {
+          const t = (progress - 0.4) / 0.6;
+          x = stackX * (1 - t);
+          y = stackY * (1 - t);
+          rot = stackRot * (1 - t);
+        }
+
+        card.style.setProperty("--qx", `${x}px`);
+        card.style.setProperty("--qy", `${y}px`);
+        card.style.setProperty("--qrot", `${rot}deg`);
+        card.style.zIndex = String(index + 1);
+      });
+    };
+
+    let frame = 0;
+    const onScroll = () => {
+      cancelAnimationFrame(frame);
+      frame = requestAnimationFrame(apply);
+    };
+
+    apply();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("resize", onScroll);
+    return () => {
+      cancelAnimationFrame(frame);
+      window.removeEventListener("scroll", onScroll);
+      window.removeEventListener("resize", onScroll);
+    };
+  }, []);
+
+  return (
+    <section className="words" ref={sectionRef}>
+      <div className="words-sticky">
+        <div className="section-head">
+          <h2>Kind words</h2>
+        </div>
+        <div className="quotes">
+          {quotes.map((item, index) => (
+            <blockquote
+              key={item.name}
+              className={`quote quote-${(index % 2) + 1}`}
+            >
+              <div className="quote-body">
+                <span className="quote-mark" aria-hidden="true">
+                  “
+                </span>
+                <p>{item.quote}</p>
+              </div>
+              <footer className="quote-person">
+                <img src={item.photo} alt="" />
+                <div>
+                  <strong>{item.name}</strong>
+                  <span>{item.role}</span>
+                </div>
+              </footer>
+            </blockquote>
+          ))}
+        </div>
+      </div>
+    </section>
   );
 }
 
@@ -289,26 +448,7 @@ export default function App() {
 
         <GlanceBoard />
 
-        <section className="words">
-          <div className="section-head">
-            <h2>Kind words</h2>
-            <p className="hand">From people I’ve built with</p>
-          </div>
-          <div className="quotes">
-            {quotes.map((item, index) => (
-              <blockquote
-                key={item.name}
-                className={`quote quote-${(index % 2) + 1}`}
-              >
-                <p>“{item.quote}”</p>
-                <footer>
-                  <strong>{item.name}</strong>
-                  <span>{item.role}</span>
-                </footer>
-              </blockquote>
-            ))}
-          </div>
-        </section>
+        <KindWords />
 
         <section className="talk">
           <h2>Let’s talk</h2>
