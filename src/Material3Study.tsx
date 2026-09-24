@@ -1,8 +1,19 @@
 import { useEffect } from "react";
 import { CtaLink } from "./CtaLink";
+import { projects } from "./data";
 
 const img = (file: string, size = 1024) =>
   `https://framerusercontent.com/images/${file}.png?scale-down-to=${size}`;
+
+const caseStudies = projects.filter((project) => !project.comingSoon);
+const currentStudy = caseStudies.findIndex(
+  (project) => project.href === "/work/material-3",
+);
+const prevProject = currentStudy > 0 ? caseStudies[currentStudy - 1] : undefined;
+const nextProject =
+  currentStudy >= 0 && currentStudy < caseStudies.length - 1
+    ? caseStudies[currentStudy + 1]
+    : undefined;
 
 function Figure({
   file,
@@ -81,6 +92,7 @@ export function Material3Study() {
           message was clear: it was time to reset, rebuild, and reimagine.
         </p>
         <Figure
+          className="study-figure is-chart"
           file="kbi6cslYifkGX4TzmOiGssxMcI4"
           alt="User distribution chart showing Android versus iOS"
         />
@@ -388,11 +400,13 @@ export function Material3Study() {
           best practices and initial team feedback.
         </p>
         <Figure
+          className="study-figure is-glow"
           file="zlRFCIX2ooYnpACjVFc6OotmNw"
           alt="After screens of the Material 3 Android agent"
           size={2048}
         />
         <Figure
+          className="study-figure is-glow"
           file="MXCtqjOZAz1MXQYAy8VBzbBTdmI"
           alt="Before screens of the Android agent"
           size={2048}
@@ -426,10 +440,42 @@ export function Material3Study() {
           enabling faster iteration, consistent experiences, and a future where
           design and development move in harmony.
         </p>
-        <CtaLink className="cta cta-lg" href="mailto:shristi278@gmail.com">
-          Let’s talk
-          <span aria-hidden="true">→</span>
-        </CtaLink>
+        <div className="study-nav">
+          {prevProject?.href ? (
+            <CtaLink
+              className="cta cta-lg"
+              href={prevProject.href}
+              {...(prevProject.internal
+                ? {}
+                : { target: "_blank", rel: "noreferrer" })}
+            >
+              <span aria-hidden="true">←</span>
+              Previous project
+            </CtaLink>
+          ) : (
+            <span className="cta cta-lg is-disabled" aria-disabled="true">
+              <span aria-hidden="true">←</span>
+              Previous project
+            </span>
+          )}
+          {nextProject?.href ? (
+            <CtaLink
+              className="cta cta-lg"
+              href={nextProject.href}
+              {...(nextProject.internal
+                ? {}
+                : { target: "_blank", rel: "noreferrer" })}
+            >
+              Next project
+              <span aria-hidden="true">→</span>
+            </CtaLink>
+          ) : (
+            <span className="cta cta-lg is-disabled" aria-disabled="true">
+              Next project
+              <span aria-hidden="true">→</span>
+            </span>
+          )}
+        </div>
       </section>
     </main>
   );

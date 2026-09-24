@@ -1,13 +1,15 @@
-import { useEffect, useRef, type CSSProperties, type PointerEvent } from "react";
+import { useEffect, useRef, useState, type CSSProperties, type PointerEvent } from "react";
+
+const mobileQuery = "(max-width: 980px)";
 
 const balloons = [
-  { src: "/footer/s-bow.png", tilt: "-7deg", restY: "10px" },
-  { src: "/footer/h-foil.png", tilt: "4deg", restY: "-14px" },
-  { src: "/footer/r-foil.png", tilt: "5deg", restY: "18px" },
-  { src: "/footer/i-blue.png", tilt: "-4deg", restY: "-6px" },
-  { src: "/footer/s-orange.png", tilt: "6deg", restY: "16px" },
-  { src: "/footer/t-jelly.png", tilt: "-5deg", restY: "-18px" },
-  { src: "/footer/i-pink.png", tilt: "4deg", restY: "8px" },
+  { src: "/footer/s-bow.webp", tilt: "-7deg", restY: "6px" },
+  { src: "/footer/h-foil.webp", tilt: "4deg", restY: "0px" },
+  { src: "/footer/r-foil.webp", tilt: "5deg", restY: "12px" },
+  { src: "/footer/i-blue.webp", tilt: "-4deg", restY: "4px" },
+  { src: "/footer/s-orange.webp", tilt: "6deg", restY: "10px" },
+  { src: "/footer/t-jelly.webp", tilt: "-5deg", restY: "2px" },
+  { src: "/footer/i-pink.webp", tilt: "4deg", restY: "8px" },
 ] as const;
 
 type Drift = {
@@ -39,10 +41,24 @@ function makeDrift(): Drift {
 }
 
 export function FooterBalloons() {
+  const [showBalloons, setShowBalloons] = useState(
+    () =>
+      typeof window !== "undefined" &&
+      !window.matchMedia(mobileQuery).matches,
+  );
   const skyRef = useRef<HTMLDivElement>(null);
   const drifts = useRef(new Map<HTMLElement, Drift>());
 
   useEffect(() => {
+    const mq = window.matchMedia(mobileQuery);
+    const apply = () => setShowBalloons(!mq.matches);
+    apply();
+    mq.addEventListener("change", apply);
+    return () => mq.removeEventListener("change", apply);
+  }, []);
+
+  useEffect(() => {
+    if (!showBalloons) return;
     const sky = skyRef.current;
     const foot = sky?.closest(".foot");
     const sticky = sky?.closest(".foot-sticky");
@@ -54,8 +70,14 @@ export function FooterBalloons() {
       if (!drifts.current.has(node)) drifts.current.set(node, makeDrift());
     });
 
+    const markSettled = () => {
+      if (nodes.every((node) => node.classList.contains("is-docked"))) {
+        foot.classList.add("is-settled");
+      }
+    };
+
     const reset = () => {
-      foot.classList.remove("is-aloft");
+      foot.classList.remove("is-aloft", "is-settled");
       nodes.forEach((node) => {
         node.classList.remove("is-docked", "is-nudging");
         const drift = drifts.current.get(node);
@@ -70,24 +92,35 @@ export function FooterBalloons() {
     if (reduced.matches) {
       foot.classList.add("is-aloft");
       nodes.forEach((node) => node.classList.add("is-docked"));
+      markSettled();
       return;
     }
 
     const onEnd = (event: AnimationEvent) => {
       if (event.animationName !== "balloon-rise") return;
       (event.currentTarget as HTMLElement).classList.add("is-docked");
+      markSettled();
     };
     nodes.forEach((node) => node.addEventListener("animationend", onEnd));
 
     const check = () => {
-      const stuck = foot.getBoundingClientRect().top <= 1;
-      if (stuck) foot.classList.add("is-aloft");
+      const box = foot.getBoundingClientRect();
+      const inView = box.top < window.innerHeight && box.bottom > 0;
+      if (inView) foot.classList.add("is-aloft");
       else reset();
     };
 
     let frame = 0;
     const tick = () => {
+      const settled = foot.classList.contains("is-settled");
       drifts.current.forEach((drift, node) => {
+        if (!settled) {
+          drift.hovering = false;
+          drift.tx = 0;
+          drift.ty = 0;
+          drift.tr = 0;
+          return;
+        }
         const stiffness = drift.hovering ? 0.045 : 0.1;
         const drag = drift.hovering ? 0.9 : 0.82;
         drift.vx += (drift.tx - drift.x) * stiffness;
@@ -138,9 +171,14 @@ export function FooterBalloons() {
       window.removeEventListener("resize", check);
       nodes.forEach((node) => node.removeEventListener("animationend", onEnd));
     };
-  }, []);
+  }, [showBalloons]);
+
+  function ready() {
+    return Boolean(skyRef.current?.closest(".foot")?.classList.contains("is-settled"));
+  }
 
   function aim(event: PointerEvent<HTMLImageElement>) {
+    if (!ready()) return;
     const el = event.currentTarget;
     const drift = drifts.current.get(el) ?? makeDrift();
     drifts.current.set(el, drift);
@@ -172,6 +210,8 @@ export function FooterBalloons() {
     });
   }
 
+  if (!showBalloons) return null;
+
   return (
     <div
       className="foot-sky"
@@ -185,6 +225,8 @@ export function FooterBalloons() {
           className="foot-balloon"
           src={balloon.src}
           alt=""
+          loading="lazy"
+          decoding="async"
           draggable={false}
           style={
             {
@@ -193,6 +235,7 @@ export function FooterBalloons() {
             } as CSSProperties
           }
           onPointerEnter={(event) => {
+            if (!ready()) return;
             const drift = drifts.current.get(event.currentTarget) ?? makeDrift();
             drift.hovering = true;
             drifts.current.set(event.currentTarget, drift);

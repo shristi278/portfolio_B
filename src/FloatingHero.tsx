@@ -1,16 +1,16 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 
 const faces = {
-  center: "/hero/girl.png",
-  right: "/hero/girl-right.png?v=named",
-  "down-right": "/hero/girl-down-right.png?v=named",
-  down: "/hero/girl-down.png?v=named",
-  "down-left": "/hero/girl-down-left.png?v=named",
-  left: "/hero/girl-left.png?v=named",
-  "up-left": "/hero/girl-up-left.png?v=named",
-  up: "/hero/girl-up.png?v=named",
-  "up-right": "/hero/girl-up-right.png?v=named",
-  work: "/hero/girl-work.png",
+  center: "/hero/girl.webp",
+  right: "/hero/girl-right.webp",
+  "down-right": "/hero/girl-down-right.webp",
+  down: "/hero/girl-down.webp",
+  "down-left": "/hero/girl-down-left.webp",
+  left: "/hero/girl-left.webp",
+  "up-left": "/hero/girl-up-left.webp",
+  up: "/hero/girl-up.webp",
+  "up-right": "/hero/girl-up-right.webp",
+  work: "/hero/girl-work.webp",
 } as const;
 
 type Gaze = keyof typeof faces;
@@ -27,10 +27,10 @@ const gazeOrder: Gaze[] = [
 ];
 
 const layers = [
-  { id: "star", src: "/hero/star.png", alt: "", depth: 1.2 },
-  { id: "stripes", src: "/hero/stripes.png", alt: "", depth: 1.35 },
-  { id: "heart", src: "/hero/heart.png", alt: "", depth: 1.5 },
-  { id: "shell", src: "/hero/shell.png", alt: "", depth: 1.7 },
+  { id: "star", src: "/hero/star.webp", alt: "", depth: 1.2 },
+  { id: "stripes", src: "/hero/stripes.webp", alt: "", depth: 1.35 },
+  { id: "heart", src: "/hero/heart.webp", alt: "", depth: 1.5 },
+  { id: "shell", src: "/hero/shell.webp", alt: "", depth: 1.7 },
 ] as const;
 
 function gazeFromPointer(nx: number, ny: number): Gaze {
@@ -52,6 +52,27 @@ export function FloatingHero({ workHover = false }: { workHover?: boolean }) {
   const current = useRef({ x: 0, y: 0 });
 
   workHoverRef.current = workHover;
+  const [facesReady, setFacesReady] = useState(false);
+
+  useEffect(() => {
+    let cancelled = false;
+    const markReady = () => {
+      if (!cancelled) setFacesReady(true);
+    };
+    const idle = window.requestIdleCallback;
+    if (typeof idle === "function") {
+      const id = idle(markReady, { timeout: 1200 });
+      return () => {
+        cancelled = true;
+        window.cancelIdleCallback(id);
+      };
+    }
+    const timer = window.setTimeout(markReady, 250);
+    return () => {
+      cancelled = true;
+      window.clearTimeout(timer);
+    };
+  }, []);
 
   useEffect(() => {
     const keys = Object.keys(faces) as Gaze[];
@@ -64,13 +85,6 @@ export function FloatingHero({ workHover = false }: { workHover?: boolean }) {
       el?.classList.toggle("is-on", keys[i] === gazeRef.current);
     });
   }, [workHover]);
-
-  useEffect(() => {
-    (Object.values(faces) as string[]).forEach((src) => {
-      const img = new Image();
-      img.src = src;
-    });
-  }, []);
 
   useEffect(() => {
     const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -148,8 +162,10 @@ export function FloatingHero({ workHover = false }: { workHover?: boolean }) {
             girlRefs.current[index] = node;
           }}
           className={`hero-layer hero-layer-girl${key === "center" ? " is-on" : ""}`}
-          src={faces[key]}
+          src={key === "center" || facesReady ? faces[key] : undefined}
           alt={key === "center" ? "Portrait of Shristi Suman" : ""}
+          fetchPriority={key === "center" ? "high" : "low"}
+          decoding="async"
           draggable={false}
         />
       ))}
@@ -162,6 +178,7 @@ export function FloatingHero({ workHover = false }: { workHover?: boolean }) {
           className={`hero-layer hero-layer-${layer.id}`}
           src={layer.src}
           alt={layer.alt}
+          decoding="async"
           draggable={false}
         />
       ))}

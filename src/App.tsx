@@ -5,6 +5,7 @@ import { FloatingHero } from "./FloatingHero";
 import { Layout } from "./Layout";
 import { Material3Study } from "./Material3Study";
 import { GlanceDialog, type GlanceOrigin } from "./GlanceDialog";
+import { Faq } from "./Faq";
 import { glances, projects, quotes, skills } from "./data";
 import { usePath } from "./nav";
 
@@ -79,7 +80,7 @@ function GlanceBoard() {
           <li key={item.href} className={`glance-item col-${(index % 3) + 1}`}>
             <article className={`glance-card tone-${index % 3}`}>
               <div className="glance-card-media">
-                <img src={item.image} alt={item.imageAlt} />
+                <img src={item.image} alt={item.imageAlt} loading="lazy" decoding="async" />
               </div>
               <div className="glance-card-wrap">
                 <div className="glance-card-shape" aria-hidden="true">
@@ -250,7 +251,7 @@ function KindWords() {
                 <p>{item.quote}</p>
               </div>
               <footer className="quote-person">
-                <img src={item.photo} alt="" />
+                <img src={item.photo} alt="" loading="lazy" decoding="async" />
                 <div>
                   <strong>{item.name}</strong>
                   <span>{item.role}</span>
@@ -298,16 +299,21 @@ export default function App() {
         <section className="hero">
           <div className="hero-grid">
             <div className="hero-copy">
-              <p className="eyebrow">Senior product designer</p>
               <h1>
-                <span className="line">From Chaos</span>
+                <span className="line">I make things.</span>
                 <span className="line">
-                  to <span className="accent">Clarity</span>
+                  Mostly <span className="accent">interfaces.</span>
                 </span>
               </h1>
               <p className="lede">
-                Driven by curiosity <span className="dot">|</span> Grounded by
-                process <span className="dot">|</span> Guided by users
+                <span className="lede-line">
+                  I’m a product designer. Give me a messy problem, a blank
+                  canvas or something that feels like it could be better.
+                </span>
+                <span className="lede-line">
+                  I’ll probably start pulling it apart, asking questions and
+                  putting it back together.
+                </span>
               </p>
               <CtaLink
                 className="cta cta-lg"
@@ -372,7 +378,12 @@ export default function App() {
                   }
                 >
                   {project.image ? (
-                    <img src={project.image} alt={project.imageAlt ?? ""} />
+                    <img
+                      src={project.image}
+                      alt={project.imageAlt ?? ""}
+                      loading={index === 0 ? "eager" : "lazy"}
+                      decoding="async"
+                    />
                   ) : project.comingSoon ? (
                     <span className="recent-icon" aria-hidden="true">
                       <svg viewBox="0 0 24 24" fill="none">
@@ -449,6 +460,7 @@ export default function App() {
         <GlanceBoard />
 
         <KindWords />
+        <Faq />
       </main>
       )}
     </Layout>

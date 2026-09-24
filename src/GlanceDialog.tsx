@@ -1,4 +1,5 @@
 import {
+  useCallback,
   useEffect,
   useLayoutEffect,
   useRef,
@@ -200,12 +201,15 @@ export function GlanceDialog({
   const atFirst = index <= 0;
   const atLast = index >= count - 1;
 
-  function goTo(next: number) {
-    if (next < 0 || next >= count) return;
-    onIndexChange(next);
-  }
+  const goTo = useCallback(
+    (next: number) => {
+      if (next < 0 || next >= count) return;
+      onIndexChange(next);
+    },
+    [count, onIndexChange],
+  );
 
-  function dismiss() {
+  const dismiss = useCallback(() => {
     if (closing) return;
     const el = panelRef.current;
     const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -224,7 +228,7 @@ export function GlanceDialog({
       fill: "forwards",
     });
     animRef.current.finished.then(onClose).catch(onClose);
-  }
+  }, [closing, onClose]);
 
   useLayoutEffect(() => {
     const el = panelRef.current;
@@ -270,7 +274,7 @@ export function GlanceDialog({
     };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
-  });
+  }, [index, atFirst, atLast, dismiss, goTo]);
 
   function onDialogKey(event: KeyboardEvent<HTMLDivElement>) {
     if (event.key !== "Tab") return;
@@ -358,6 +362,7 @@ export function GlanceDialog({
                 key={item.dialogImage ?? item.image}
                 src={item.dialogImage ?? item.image}
                 alt={item.imageAlt}
+                decoding="async"
               />
             )}
           </div>

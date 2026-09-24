@@ -38,11 +38,18 @@ export function ThemeCursor() {
       frame = requestAnimationFrame(tick);
     };
 
+    const onLeave = () => {
+      cursor.classList.remove("is-cta");
+      cursor.classList.remove("is-hidden");
+    };
+
     window.addEventListener("pointermove", onMove, { passive: true });
+    document.documentElement.addEventListener("mouseleave", onLeave);
     frame = requestAnimationFrame(tick);
     return () => {
       cancelAnimationFrame(frame);
       window.removeEventListener("pointermove", onMove);
+      document.documentElement.removeEventListener("mouseleave", onLeave);
       document.documentElement.classList.remove("has-theme-cursor");
     };
   }, []);
@@ -51,7 +58,7 @@ export function ThemeCursor() {
     <div className="theme-cursor" ref={cursorRef} aria-hidden="true">
       <img
         className="theme-cursor-pointer"
-        src="/cursor/pointer.png"
+        src="/cursor/pointer.webp"
         alt=""
         width={44}
         height={45}
@@ -59,7 +66,7 @@ export function ThemeCursor() {
       />
       <img
         className="theme-cursor-dog"
-        src="/cursor/balloon-dog.png"
+        src="/cursor/balloon-dog.webp"
         alt=""
         draggable={false}
       />
