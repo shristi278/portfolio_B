@@ -10,7 +10,7 @@ import {
 } from "react";
 import { createPortal } from "react-dom";
 import { playCtaPop } from "./ctaPop";
-import { glances } from "./data";
+import type { Glance } from "./data";
 
 export type GlanceOrigin = {
   x: number;
@@ -56,7 +56,7 @@ function formatDesc(text: string) {
 }
 
 type Props = {
-  items: Item[];
+  items: Glance[];
   index: number;
   origin: GlanceOrigin;
   onClose: () => void;
