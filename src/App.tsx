@@ -449,18 +449,6 @@ export default function App() {
         <GlanceBoard />
 
         <KindWords />
-
-        <section className="talk">
-          <h2>Let’s talk</h2>
-          <p>
-            Open to conversations about product, systems, and making messy
-            problems feel obvious.
-          </p>
-          <CtaLink className="cta cta-lg" href="mailto:shristi278@gmail.com">
-            shristi278@gmail.com
-            <span aria-hidden="true">→</span>
-          </CtaLink>
-        </section>
       </main>
       )}
     </Layout>

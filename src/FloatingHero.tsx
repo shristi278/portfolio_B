@@ -30,7 +30,7 @@ const layers = [
   { id: "star", src: "/hero/star.png", alt: "", depth: 1.2 },
   { id: "stripes", src: "/hero/stripes.png", alt: "", depth: 1.35 },
   { id: "heart", src: "/hero/heart.png", alt: "", depth: 1.5 },
-  { id: "cursor", src: "/hero/cursor.png", alt: "", depth: 1.7 },
+  { id: "shell", src: "/hero/shell.png", alt: "", depth: 1.7 },
 ] as const;
 
 function gazeFromPointer(nx: number, ny: number): Gaze {

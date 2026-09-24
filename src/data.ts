@@ -1,6 +1,12 @@
 export const resumeUrl =
   "https://drive.google.com/file/d/1upDGlALbQ2gzdtGEZpzHpH524VkU4V7z/view?usp=sharing";
 
+export const socials = {
+  email: "mailto:shristi278@gmail.com",
+  linkedin: "https://www.linkedin.com/in/shristi-suman-37034a1a1",
+  instagram: "https://www.instagram.com/_shristi.suman_/",
+} as const;
+
 export type Project = {
   id: string;
   title: string;
