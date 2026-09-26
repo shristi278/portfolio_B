@@ -5,6 +5,7 @@ import { FloatingHero } from "./FloatingHero";
 import { Layout } from "./Layout";
 import { Material3Study } from "./Material3Study";
 import { GlanceDialog, type GlanceOrigin } from "./GlanceDialog";
+import { About } from "./About";
 import { Faq } from "./Faq";
 import { glances, projects, quotes, skills } from "./data";
 import { usePath } from "./nav";
@@ -291,10 +292,15 @@ export default function App() {
   }, [path]);
 
   const onCaseStudy = path === "/work/material-3";
+  const onAbout = path === "/about";
 
   return (
-    <Layout scrolled={onCaseStudy || scrolled}>
-      {onCaseStudy ? <Material3Study /> : (
+    <Layout scrolled={onCaseStudy || onAbout || scrolled}>
+      {onCaseStudy ? (
+        <Material3Study />
+      ) : onAbout ? (
+        <About />
+      ) : (
         <main id="top">
         <section className="hero">
           <div className="hero-grid">

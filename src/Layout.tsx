@@ -4,7 +4,7 @@ import { CtaLink } from "./CtaLink";
 import { FooterBalloons } from "./FooterBalloons";
 import { ThemeCursor } from "./ThemeCursor";
 import { resumeUrl, socials } from "./data";
-import { go } from "./nav";
+import { go, usePath } from "./nav";
 
 type Props = {
   children: ReactNode;
@@ -12,6 +12,7 @@ type Props = {
 };
 
 export function Layout({ children, scrolled = true }: Props) {
+  const path = usePath();
   const [menuOpen, setMenuOpen] = useState(false);
   const navId = useId();
 
@@ -90,12 +91,13 @@ export function Layout({ children, scrolled = true }: Props) {
             Work
           </a>
           <a
-            className="pill"
-            href="/#about"
+            className={path === "/about" ? "pill is-active" : "pill"}
+            href="/about"
+            aria-current={path === "/about" ? "page" : undefined}
             onClick={(event) => {
               event.preventDefault();
               closeMenu();
-              go("/#about");
+              go("/about");
             }}
           >
             About
@@ -195,10 +197,10 @@ export function Layout({ children, scrolled = true }: Props) {
                 Works
               </a>
               <a
-                href="/#about"
+                href="/about"
                 onClick={(event) => {
                   event.preventDefault();
-                  go("/#about");
+                  go("/about");
                 }}
               >
                 About
