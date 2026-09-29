@@ -437,6 +437,7 @@ b {
 .hero-float {
   position: relative;
   z-index: 0;
+  align-self: center;
   width: 100%;
   min-width: 0;
   aspect-ratio: 1;
@@ -2625,8 +2626,19 @@ blockquote footer {
   color: color-mix(in srgb, var(--pick-ink) 62%, var(--pick-fill));
 }
 
-.pill.is-active {
-  font-weight: 700;
+.nav-links .pill {
+  font-weight: 500;
+}
+
+.nav-links .pill:hover {
+  font-weight: 600;
+}
+
+.nav-links .pill.is-active {
+  text-decoration: underline;
+  text-decoration-thickness: 1.5px;
+  text-underline-offset: 0.32em;
+  text-decoration-color: currentColor;
 }
 
 .experiments {
@@ -2634,6 +2646,11 @@ blockquote footer {
   background: var(--color-primary);
   color: var(--color-contrast);
   overflow-x: clip;
+}
+
+.experiments .section-head,
+#experiments-title {
+  scroll-margin-top: calc(var(--nav-h, 80px) + 12px);
 }
 
 .experiments .section-head p {
@@ -2748,6 +2765,9 @@ blockquote footer {
 }
 
 .notes-live {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
   background:
     radial-gradient(circle at 10px 0, transparent 9px, var(--notes-paper) 10px) 0 0 / 20px 12px repeat-x,
     var(--notes-paper);
@@ -2764,24 +2784,23 @@ blockquote footer {
 }
 
 .notes-num {
-  position: absolute;
-  top: 10px;
-  left: 12px;
-  z-index: 1;
+  position: relative;
+  flex: 0 0 22px;
   width: 22px;
   height: 22px;
+  margin-top: 2px;
   display: grid;
   place-items: center;
   border-radius: 50%;
   font-size: 12px;
+  line-height: 1;
   pointer-events: none;
   color: var(--color-contrast);
   background: var(--color-primary);
 }
 
 .notes-live h3 {
-  margin: 4px 0 10px;
-  padding-left: 28px;
+  margin: 0 0 10px;
   font-family: inherit;
   font-size: clamp(15px, 1.15vw, 18px);
   font-weight: 400;
@@ -2812,6 +2831,8 @@ blockquote footer {
 }
 
 .notes-link {
+  flex: 1;
+  min-width: 0;
   display: block;
   color: inherit;
   text-decoration: none;
@@ -2928,12 +2949,16 @@ blockquote footer {
   pointer-events: none;
 }
 
+.notes-books {
+  display: contents;
+}
+
 .essay {
   --about-check-b: color-mix(in srgb, var(--color-secondary) 5%, white);
   width: 100%;
   max-width: none;
   margin: 0;
-  padding: 40px 64px min(48vh, 440px);
+  padding: 40px 64px 56px;
   color: var(--color-primary);
   overflow-x: clip;
   background: var(--about-check-b);
@@ -2958,7 +2983,7 @@ blockquote footer {
   justify-content: space-between;
   align-items: flex-start;
   gap: 16px;
-  margin: 56px 0 0;
+  margin: 40px 0 0;
 }
 
 .essay-pager-link {
@@ -2977,7 +3002,7 @@ blockquote footer {
 }
 
 .essay-hero {
-  margin-bottom: 56px;
+  margin-bottom: 40px;
 }
 
 .essay .eyebrow {
@@ -3025,9 +3050,14 @@ blockquote footer {
 }
 
 .essay h2 {
-  margin: 0 0 20px;
+  margin: 0 0 14px;
   font-size: clamp(26px, 3.2vw, 38px);
   line-height: 1.18;
+}
+
+.essay-step {
+  display: inline-block;
+  margin-right: 0.28em;
 }
 
 .essay h3 {
@@ -3037,7 +3067,7 @@ blockquote footer {
 }
 
 .essay-section {
-  margin: 0 0 40px;
+  margin: 0 0 28px;
 }
 
 .essay-section p,
@@ -3100,7 +3130,7 @@ blockquote footer {
   display: block;
   width: 100%;
   height: 1px;
-  margin: 8px 0 48px;
+  margin: 4px 0 28px;
   border: 0;
   background: color-mix(in srgb, var(--color-primary) 16%, transparent);
 }
@@ -3878,8 +3908,12 @@ blockquote footer {
     margin-top: 0;
   }
 
-  .essay-collage {
-    grid-template-columns: 1fr;
+  .essay {
+    padding: 24px 16px 48px;
+  }
+
+  .essay h1 {
+    font-size: clamp(28px, 9vw, 40px);
   }
 
   .essay-pager {
@@ -3895,14 +3929,20 @@ blockquote footer {
     white-space: normal;
   }
 
+  .experiments {
+    padding: calc(var(--nav-h, 64px) + 20px) 16px 120px;
+    scroll-margin-top: var(--nav-h, 64px);
+  }
+
   .notes-board {
     display: flex;
     flex-wrap: wrap;
     align-items: flex-start;
     justify-content: center;
-    gap: 20px 14px;
+    gap: 18px 12px;
     min-height: 0;
-    padding: 24px 4px 12px;
+    padding: 32px 10px 28px;
+    overflow: visible;
   }
 
   .notes-item,
@@ -3910,17 +3950,63 @@ blockquote footer {
     position: relative;
     left: auto;
     top: auto;
-    width: min(100%, 280px);
-    transform: rotate(var(--r, 0deg));
+    touch-action: manipulation;
     cursor: pointer;
+    transform: rotate(calc(var(--r, 0deg) * 0.4));
+  }
+
+  .notes-live {
+    flex: 1 1 100%;
+    width: 100%;
+    max-width: 100%;
+  }
+
+  .notes-polaroid,
+  .notes-quote {
+    flex: 0 1 calc(50% - 8px);
+    width: calc(50% - 8px);
+    max-width: none;
   }
 
   .notes-draft-sm {
-    width: min(46%, 132px);
+    flex: 0 1 calc(46% - 8px);
+    width: calc(46% - 8px);
+    max-width: 148px;
   }
 
   .notes-badge-item {
-    width: min(28%, 96px);
+    flex: 0 1 28%;
+    width: min(28%, 104px);
+  }
+
+  .notes-books {
+    display: flex;
+    flex: 1 1 100%;
+    width: 100%;
+    justify-content: center;
+    align-items: flex-end;
+    gap: 12px;
+    padding: 4px 0 8px;
+  }
+
+  .notes-live h3 {
+    font-size: 16px;
+  }
+
+  .notes-polaroid {
+    padding: 6px 6px 26px;
+  }
+
+  .notes-polaroid figcaption {
+    margin-top: 8px;
+    font-size: 10px;
+  }
+}
+
+@media (hover: none) {
+  .notes-link:hover,
+  .notes-link:focus-visible {
+    transform: none;
   }
 }
 

@@ -379,7 +379,7 @@ export function AiEssay() {
 
         <Reveal>
           <section className="essay-section" aria-labelledby="essay-language">
-            <h2 id="essay-language">01 — Finding a visual language</h2>
+            <h2 id="essay-language"><span className="essay-step">01</span>Finding a visual language</h2>
             <P>
               I started, as most design projects start, with a Figma moodboard.
               It honestly felt like being back in college. I collected things I
@@ -416,7 +416,7 @@ export function AiEssay() {
 
         <Reveal>
           <section className="essay-section" aria-labelledby="essay-rejected">
-            <h2 id="essay-rejected">02 — The portfolio that didn't make it</h2>
+            <h2 id="essay-rejected"><span className="essay-step">02</span>The portfolio that didn't make it</h2>
             <P>
               Before reaching this direction, I made several versions of the
               portfolio. And rejected them. Some were too minimal. Some felt too
@@ -442,7 +442,7 @@ export function AiEssay() {
 
         <Reveal>
           <section className="essay-section" aria-labelledby="essay-code">
-            <h2 id="essay-code">03 — From idea to code</h2>
+            <h2 id="essay-code"><span className="essay-step">03</span>From idea to code</h2>
             <P>
               Once I had the visual direction, I didn't design the entire
               website in Figma. I only used Figma for the **moodboard, visual
@@ -471,7 +471,7 @@ export function AiEssay() {
 
         <Reveal>
           <section className="essay-section" aria-labelledby="essay-wrong">
-            <h2 id="essay-wrong">04 — When the AI doesn't understand what you mean</h2>
+            <h2 id="essay-wrong"><span className="essay-step">04</span>When the AI doesn't understand what you mean</h2>
             <P>
               Of course, it wasn't magic. I initially had a very ambitious hero
               animation in mind. I experimented with AI video generation but
@@ -512,7 +512,7 @@ export function AiEssay() {
 
         <Reveal>
           <section className="essay-section essay-quiet" aria-labelledby="essay-mine">
-            <h2 id="essay-mine">05 — The part AI didn't design</h2>
+            <h2 id="essay-mine"><span className="essay-step">05</span>The part AI didn't design</h2>
             <P>
               The visual direction was mine. The interaction ideas were mine.
               The decision to combine Neo-Y2K with brutalism was mine. AI helped
@@ -538,7 +538,7 @@ export function AiEssay() {
 
         <Reveal>
           <section className="essay-section" aria-labelledby="essay-details">
-            <h2 id="essay-details">06 — Designing the details</h2>
+            <h2 id="essay-details"><span className="essay-step">06</span>Designing the details</h2>
             <P>
               Some of my favourite parts of the final portfolio are also the
               most experimental. The **hero and footer** were particularly fun
@@ -558,7 +558,7 @@ export function AiEssay() {
 
         <Reveal>
           <section className="essay-section" aria-labelledby="essay-month">
-            <h2 id="essay-month">07 — One month of building</h2>
+            <h2 id="essay-month"><span className="essay-step">07</span>One month of building</h2>
             <P>
               The whole build took about **one month**. My setup was relatively
               simple:

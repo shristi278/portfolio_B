@@ -41,6 +41,33 @@ export function Layout({ children, scrolled = true }: Props) {
   }, []);
 
   const closeMenu = () => setMenuOpen(false);
+  const onAbout = path === "/about";
+  const [onWork, setOnWork] = useState(false);
+
+  useEffect(() => {
+    if (path !== "/") {
+      setOnWork(false);
+      return;
+    }
+
+    const section = document.getElementById("work");
+    if (!section) {
+      setOnWork(false);
+      return;
+    }
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        setOnWork(entry.isIntersecting);
+      },
+      {
+        threshold: [0, 0.08, 0.2],
+        rootMargin: "-88px 0px -48% 0px",
+      },
+    );
+    observer.observe(section);
+    return () => observer.disconnect();
+  }, [path]);
 
   return (
     <>
@@ -80,8 +107,9 @@ export function Layout({ children, scrolled = true }: Props) {
         ) : null}
         <nav id={navId} className="nav-links" aria-label="Primary">
           <a
-            className="pill"
+            className={onWork ? "pill is-active" : "pill"}
             href="/#work"
+            aria-current={onWork ? "page" : undefined}
             onClick={(event) => {
               event.preventDefault();
               closeMenu();
@@ -91,9 +119,9 @@ export function Layout({ children, scrolled = true }: Props) {
             Work
           </a>
           <a
-            className={path === "/about" ? "pill is-active" : "pill"}
+            className={onAbout ? "pill is-active" : "pill"}
             href="/about"
-            aria-current={path === "/about" ? "page" : undefined}
+            aria-current={onAbout ? "page" : undefined}
             onClick={(event) => {
               event.preventDefault();
               closeMenu();
@@ -172,20 +200,33 @@ export function Layout({ children, scrolled = true }: Props) {
                   decoding="async"
                 />
               </a>
+              <a
+                href={socials.x}
+                target="_blank"
+                rel="noreferrer"
+                aria-label="X"
+              >
+                <img
+                  src="/footer/social-x.webp"
+                  alt=""
+                  width={56}
+                  height={56}
+                  decoding="async"
+                />
+              </a>
             </div>
           </div>
           <div className="foot-bar">
-            <a
-              className="mark"
-              href="/"
-              onClick={(event) => {
-                event.preventDefault();
-                go("/");
-              }}
-            >
-              Shristi Suman
-            </a>
             <p>Made in India · © {new Date().getFullYear()} shristi_suman</p>
+            <p className="foot-made">
+              <span>Made with</span>
+              <span className="foot-made-badges">
+                <img src="/footer/badge-gemini.webp" alt="Gemini" width={44} height={44} decoding="async" />
+                <img src="/footer/badge-gpt.webp" alt="ChatGPT" width={44} height={44} decoding="async" />
+                <img src="/footer/badge-chai.webp" alt="chai" width={44} height={44} decoding="async" />
+                <img src="/footer/badge-heart.webp" alt="heart" width={44} height={44} decoding="async" />
+              </span>
+            </p>
             <div className="foot-links">
               <a
                 href="/#work"

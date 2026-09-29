@@ -1,19 +1,5 @@
 export const THEMES = [
   {
-    id: "white",
-    label: "White",
-    primary: "#ffffff",
-    contrast: "#363636",
-    secondary: "#5c5c5c",
-  },
-  {
-    id: "cream",
-    label: "Cream",
-    primary: "#ede6d3",
-    contrast: "#2c2c2c",
-    secondary: "#a83800",
-  },
-  {
     id: "blue",
     label: "Blue",
     primary: "#002180",
@@ -38,8 +24,8 @@ export const THEMES = [
 
 export type ThemeId = (typeof THEMES)[number]["id"];
 
-export const DEFAULT_THEME: ThemeId = "blue";
-export const THEME_STORAGE_KEY = "site-theme-v3";
+export const DEFAULT_THEME: ThemeId = "green";
+export const THEME_STORAGE_KEY = "site-theme-v4";
 
 export function isThemeId(value: string | null): value is ThemeId {
   return THEMES.some((theme) => theme.id === value);

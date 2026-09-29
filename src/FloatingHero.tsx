@@ -33,6 +33,10 @@ const layers = [
   { id: "shell", src: "/hero/shell.webp", alt: "", depth: 1.7 },
 ] as const;
 
+function clamp(value: number, min: number, max: number) {
+  return Math.min(max, Math.max(min, value));
+}
+
 function gazeFromPointer(nx: number, ny: number): Gaze {
   const dist = Math.hypot(nx, ny);
   if (dist < 0.16) return "center";
@@ -99,12 +103,35 @@ export function FloatingHero({ workHover = false }: { workHover?: boolean }) {
       });
     };
 
+    const wrapInView = (rect: DOMRect) =>
+      rect.width > 8 &&
+      rect.height > 8 &&
+      rect.bottom > 0 &&
+      rect.top < window.innerHeight;
+
+    const resetMotion = () => {
+      target.current = { x: 0, y: 0 };
+      if (!workHoverRef.current) setGaze("center");
+    };
+
     const onMove = (event: MouseEvent) => {
       const wrap = wrapRef.current;
       if (!wrap) return;
       const rect = wrap.getBoundingClientRect();
-      const nx = (event.clientX - (rect.left + rect.width / 2)) / rect.width;
-      const ny = (event.clientY - (rect.top + rect.height / 2)) / rect.height;
+      if (!wrapInView(rect)) {
+        resetMotion();
+        return;
+      }
+      const nx = clamp(
+        (event.clientX - (rect.left + rect.width / 2)) / rect.width,
+        -0.55,
+        0.55,
+      );
+      const ny = clamp(
+        (event.clientY - (rect.top + rect.height / 2)) / rect.height,
+        -0.55,
+        0.55,
+      );
       target.current = { x: nx, y: ny };
       if (workHoverRef.current) {
         setGaze("work");
@@ -114,29 +141,49 @@ export function FloatingHero({ workHover = false }: { workHover?: boolean }) {
     };
 
     const onLeave = () => {
-      target.current = { x: 0, y: 0 };
-      if (!workHoverRef.current) setGaze("center");
+      resetMotion();
+    };
+
+    const onScroll = () => {
+      const wrap = wrapRef.current;
+      if (!wrap || wrapInView(wrap.getBoundingClientRect())) return;
+      resetMotion();
     };
 
     window.addEventListener("mousemove", onMove);
+    window.addEventListener("scroll", onScroll, { passive: true });
     document.documentElement.addEventListener("mouseleave", onLeave);
 
     if (reduce) return () => {
       window.removeEventListener("mousemove", onMove);
+      window.removeEventListener("scroll", onScroll);
       document.documentElement.removeEventListener("mouseleave", onLeave);
     };
 
     const tick = () => {
+      const wrap = wrapRef.current;
+      if (wrap && !wrapInView(wrap.getBoundingClientRect())) {
+        target.current = { x: 0, y: 0 };
+      }
       const t = target.current;
       const c = current.current;
-      c.x += (t.x - c.x) * 0.1;
-      c.y += (t.y - c.y) * 0.1;
+      c.x += (t.x - c.x) * 0.18;
+      c.y += (t.y - c.y) * 0.18;
+      if (Math.abs(c.x) < 0.002 && Math.abs(c.y) < 0.002 && t.x === 0 && t.y === 0) {
+        c.x = 0;
+        c.y = 0;
+      }
+      const girlShift = c.x === 0 && c.y === 0 ? "none" : `translate3d(${c.x * 4.5}px, ${c.y * 3}px, 0)`;
       girlRefs.current.forEach((el) => {
         if (!el) return;
-        el.style.transform = `translate3d(${c.x * 4.5}px, ${c.y * 3}px, 0)`;
+        el.style.transform = girlShift;
       });
       layerRefs.current.forEach((el, i) => {
         if (!el) return;
+        if (girlShift === "none") {
+          el.style.transform = "none";
+          return;
+        }
         const depth = layers[i].depth;
         el.style.transform = `translate3d(${c.x * 18 * depth}px, ${c.y * 12 * depth}px, 0)`;
       });
@@ -146,6 +193,7 @@ export function FloatingHero({ workHover = false }: { workHover?: boolean }) {
 
     return () => {
       window.removeEventListener("mousemove", onMove);
+      window.removeEventListener("scroll", onScroll);
       document.documentElement.removeEventListener("mouseleave", onLeave);
       cancelAnimationFrame(frame.current);
     };

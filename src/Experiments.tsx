@@ -421,23 +421,25 @@ export function Experiments() {
           </figure>
         ))}
 
-        {badges.map((badge) => (
-          <div
-            key={badge.id}
-            className={`notes-item notes-badge-item${dragging === badge.id ? " is-dragging" : ""}`}
-            data-note-id={badge.id}
-            style={placed(badge.style, spots[badge.id], dragging === badge.id)}
-          >
-            <img
-              className="notes-badge"
-              src={badge.src}
-              alt={badge.alt}
-              draggable={false}
-              loading="lazy"
-              decoding="async"
-            />
-          </div>
-        ))}
+        <div className="notes-books">
+          {badges.map((badge) => (
+            <div
+              key={badge.id}
+              className={`notes-item notes-badge-item${dragging === badge.id ? " is-dragging" : ""}`}
+              data-note-id={badge.id}
+              style={placed(badge.style, spots[badge.id], dragging === badge.id)}
+            >
+              <img
+                className="notes-badge"
+                src={badge.src}
+                alt={badge.alt}
+                draggable={false}
+                loading="lazy"
+                decoding="async"
+              />
+            </div>
+          ))}
+        </div>
       </div>
     </section>
   );
