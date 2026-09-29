@@ -5,6 +5,7 @@ export const socials = {
   email: "mailto:shristi278@gmail.com",
   linkedin: "https://www.linkedin.com/in/shristi-suman-37034a1a1/",
   instagram: "https://www.instagram.com/builtbyshristi/",
+  x: "https://x.com/shristydesign",
 } as const;
 
 export type Project = {
@@ -63,7 +64,7 @@ export const projects: Project[] = [
   {
     id: "04",
     comingSoon: true,
-    title: "Still in process...\nit will be added here soon ⌚️",
+    title: "Still in process. It will be added here soon.",
     image: "/work/coming-soon.webp",
     imageAlt: "3D illustration of a designer working on a laptop in an orange beanbag",
   },
@@ -90,7 +91,8 @@ export const glances: Glance[] = [
     result: "App market for B2B companies",
     image: "/work/glance-app-store.webp",
     imageAlt: "Laptop on a desk showing the me mate app store dashboard",
-    video: "/work/glance-app-b2b.mov",
+    video: "/work/glance_app_store.mp4",
+    contain: true,
     href: "https://www.figma.com/proto/aoD1eBc6KPq0Q7RX1AreGN/Projects-for-portfolio?node-id=0-1&p=f&viewport=317%2C90%2C0.06&t=TKsmv9K0OBzWqZIi-0&scaling=min-zoom&content-scaling=fixed&starting-point-node-id=2%3A785&show-proto-sidebar=1",
   },
   {
@@ -121,7 +123,8 @@ export const glances: Glance[] = [
     result: "End-to-end label design software",
     image: "/work/glance-labelynk-desk.webp",
     imageAlt: "Laptop showing the SOTI LABELYNK label designer",
-    video: "/work/glance-labelynk.mov",
+    video: "/work/label_designer.mp4",
+    contain: true,
     href: "https://www.figma.com/proto/aoD1eBc6KPq0Q7RX1AreGN/Projects-for-portfolio?node-id=0-1&p=f&viewport=-71%2C514%2C0.03&t=TKsmv9K0OBzWqZIi-0&scaling=min-zoom&content-scaling=fixed&starting-point-node-id=137%3A44701&show-proto-sidebar=1",
   },
   {
@@ -131,8 +134,8 @@ export const glances: Glance[] = [
     result: "Mood tracker for moms",
     image: "/work/glance-floom.webp",
     imageAlt: "Three phones showing Floom profile, mood tracker, and journal screens",
-    video: "/work/glance-mood-tracker.mov",
-    videoRadius: 32,
+    video: "/work/moodtracker.mp4",
+    contain: true,
     href: "https://www.figma.com/proto/aoD1eBc6KPq0Q7RX1AreGN/Projects-for-portfolio?node-id=0-1&p=f&viewport=-68%2C-5267%2C0.29&t=TKsmv9K0OBzWqZIi-0&scaling=min-zoom&content-scaling=fixed&starting-point-node-id=5%3A22530&show-proto-sidebar=1",
   },
   {
@@ -153,7 +156,7 @@ export const quotes = [
     role: "Product design manager, SOTI · ex-BookMyShow",
     photo: "/quotes/manu.webp",
     quote:
-      "Shristy has quickly become a key contributor, shaping the design of SOTI Snap. She has also become the go-to person for developers, ensuring seamless collaboration between teams. If you think the SOTI Snap UI looks sharper, it’s because Shristy worked closely with our developers to aim for pixel perfection.",
+      "Shristi has quickly become a key contributor, shaping the design of SOTI Snap. She has also become the go-to person for developers, ensuring seamless collaboration between teams. If you think the SOTI Snap UI looks sharper, it’s because Shristi worked closely with our developers to aim for pixel perfection.",
   },
   {
     name: "Deepak Kumar",
@@ -174,7 +177,191 @@ export const quotes = [
     role: "Senior product manager, SOTI",
     photo: "/quotes/priyanshi.webp",
     quote:
-      "I appreciate Shristy for the fresh perspective that she brings. Her attention to detail and the usage of such beautiful icons is so new. Also, she respects the deadlines, which are always pressing in MobiControl.",
+      "I appreciate Shristi for the fresh perspective that she brings. Her attention to detail and the usage of such beautiful icons is so new. Also, she respects the deadlines, which are always pressing in MobiControl.",
+  },
+];
+
+export const aboutRibbon =
+  "Nominated MVP for shipping design system — SOTI";
+
+export const aboutRibbonAlt =
+  "Recognised in Global PM meet at SOTI for New illustration style";
+
+export const aboutPicksCopy = {
+  title: "Who am I?",
+  paragraphs: [
+    "Hi, I’m Shristi.",
+    "I’m a product designer who likes figuring out why something feels complicated, then making it feel obvious.",
+    "I’ve worked across research, consumer products and complex B2B software. Today, I design enterprise experiences at SOTI, where the problems are rarely small and the interfaces definitely aren’t simple.",
+    "I studied Fashion Communication at NIFT, which probably explains why I care a little too much about typography, visual details and how things feel.",
+    "I’m interested in the space where systems, technology and human behaviour meet.",
+    "When I’m not designing, I’m usually watching K dramas, playing badminton, experimenting with visuals or wondering why someone decided that particular button should be there.",
+  ],
+};
+
+export type AboutPick = {
+  title: string;
+  image: string;
+  imageAlt: string;
+  caption: string;
+  video?: string;
+  focus?: string;
+};
+
+export const aboutPicks: AboutPick[] = [
+  {
+    title: "Chai in the hills",
+    caption: "chai",
+    image: "/about/polaroids/chai.jpg",
+    imageAlt: "Hand holding a small cup of chai against mountain hills",
+    focus: "center 58%",
+  },
+  {
+    title: "Palm sunset",
+    caption: "sunset",
+    image: "/about/polaroids/sunset.jpg",
+    imageAlt: "Palm trees against an ocean sunset",
+    focus: "center 62%",
+  },
+  {
+    title: "Badminton night",
+    caption: "badminton",
+    image: "/about/polaroids/badminton.jpg",
+    imageAlt: "Playing badminton indoors on a green court",
+    focus: "center 22%",
+  },
+  {
+    title: "Pangong lake",
+    caption: "pangong",
+    image: "/about/polaroids/pangong.jpg",
+    imageAlt: "Standing by a turquoise mountain lake in Ladakh",
+    focus: "center 28%",
+  },
+  {
+    title: "Jaipur fort",
+    caption: "jaipur",
+    image: "/about/polaroids/jaipur.jpg",
+    imageAlt: "Amber Fort courtyard in Jaipur",
+    focus: "center 72%",
+  },
+  {
+    title: "Old town lanes",
+    caption: "lanes",
+    image: "/about/polaroids/lanes.jpg",
+    imageAlt: "A narrow street with scooters and tiled rooftops",
+    focus: "center 55%",
+  },
+  {
+    title: "A tiny daisy",
+    caption: "daisy",
+    image: "/about/polaroids/daisy.jpg",
+    imageAlt: "Hand holding a small white daisy",
+    focus: "center 52%",
+  },
+  {
+    title: "Go-karting",
+    caption: "karting",
+    image: "/about/polaroids/karting.jpg",
+    imageAlt: "Sitting on a go-kart at the track at night",
+    focus: "center 32%",
+  },
+  {
+    title: "Hill rain",
+    caption: "rain",
+    image: "/about/polaroids/rain.jpg",
+    imageAlt: "Standing on a wet mountain road in the rain",
+    focus: "center 28%",
+  },
+  {
+    title: "Coastline",
+    caption: "coast",
+    image: "/about/polaroids/coast.jpg",
+    imageAlt: "Palm-lined beach and ocean under a wide blue sky",
+    focus: "center 68%",
+  },
+  {
+    title: "Stepwell",
+    caption: "stepwell",
+    image: "/about/polaroids/stepwell.jpg",
+    imageAlt: "Stone stepwell with geometric staircases and water",
+    focus: "center 42%",
+  },
+  {
+    title: "Graduation",
+    caption: "graduation",
+    image: "/about/polaroids/saree.jpg",
+    imageAlt: "Wearing a cream saree with a grey stole at night",
+    focus: "center 8%",
+  },
+  {
+    title: "Paddle boats",
+    caption: "boats",
+    image: "/about/polaroids/boats.jpg",
+    imageAlt: "Dragon paddle boats on a hill lake at dusk",
+    focus: "center 48%",
+  },
+  {
+    title: "Kayak palms",
+    caption: "kayak",
+    image: "/about/polaroids/kayak.jpg",
+    imageAlt: "Kayaking through a coconut palm canal",
+    focus: "center 70%",
+  },
+  {
+    title: "Gym hour",
+    caption: "gym",
+    image: "/about/polaroids/gym.jpg",
+    imageAlt: "Gym mirror selfie in workout gloves",
+    focus: "center 12%",
+  },
+  {
+    title: "Ladakh horse",
+    caption: "ladakh",
+    image: "/about/polaroids/ladakh.jpg",
+    imageAlt: "A horse standing in a high-altitude desert under clouds",
+    focus: "center 68%",
+  },
+  {
+    title: "City stroll",
+    caption: "stroll",
+    image: "/about/polaroids/stroll.jpg",
+    imageAlt: "Walking under a tree with a tote bag and white sneakers",
+    focus: "center 48%",
+  },
+  {
+    title: "Park cricket",
+    caption: "cricket",
+    image: "/about/polaroids/cricket.jpg",
+    imageAlt: "Friends playing cricket in a sunny park",
+    focus: "center 52%",
+  },
+  {
+    title: "Golden hour",
+    caption: "sun",
+    image: "/about/polaroids/sun.jpg",
+    imageAlt: "Hand covering the face in warm sunlight",
+    focus: "center 22%",
+  },
+  {
+    title: "Prayer flags",
+    caption: "flags",
+    image: "/about/polaroids/flags.jpg",
+    imageAlt: "Tall pines strung with colorful prayer flags",
+    focus: "center 35%",
+  },
+  {
+    title: "Haridwar ghat",
+    caption: "haridwar",
+    image: "/about/polaroids/haridwar.jpg",
+    imageAlt: "Clock tower and river ghats seen through carved arches",
+    focus: "center 38%",
+  },
+  {
+    title: "River bridge",
+    caption: "bridge",
+    image: "/about/polaroids/bridge.jpg",
+    imageAlt: "Standing on a wooden bridge over a mountain river",
+    focus: "center 32%",
   },
 ];
 
@@ -190,3 +377,147 @@ export const skills = [
   "Visual design",
   "Theming",
 ];
+
+export const essayHref = "/writing/portfolio-with-ai";
+
+export const essay = {
+  slug: essayHref,
+  title: "How I Built My Portfolio With AI",
+  subtitle:
+    "A year of rejected designs, one very specific visual direction and a month of building with ChatGPT + Cursor.",
+  meta: "PROCESS / AI × DESIGN / 2026",
+  description:
+    "How Shristi Suman spent a year rejecting polished portfolios, landed on Neo-Y2K × digital brutalism, and built the live site in a month with ChatGPT, Cursor, GitHub and Vercel.",
+  author: "Shristi Suman",
+  date: "2026",
+  keywords: [
+    "product design",
+    "AI-assisted design",
+    "AI prototyping",
+    "Cursor",
+    "ChatGPT",
+    "Neo-Y2K",
+    "digital brutalism",
+    "portfolio design",
+  ],
+  thumbnail: {
+    src: "/writing/experiment-thumb-b.webp",
+    alt: "A designer at a laptop looking up at a night sky of floating screens, sketches, and 3D objects.",
+  },
+  hero: {
+    src: "/hero/girl.webp",
+    alt: "Final portfolio hero character: a 3D illustrated woman looking aside, the centrepiece of the live site.",
+  },
+  collage: [
+    {
+      src: "/writing/rejected-notebook.webp",
+      alt: "Earlier newspaper-style portfolio: Designer’s Notebook, serif type, and a high-contrast portrait.",
+    },
+    {
+      src: "/writing/rejected-dark.webp",
+      alt: "Earlier dark portfolio with pixel-art flower, pixel type, and SOTI-focused intro copy.",
+    },
+    {
+      src: "/writing/rejected-curiosity.webp",
+      alt: "Earlier minimal portfolio with stacked headlines and a painted landscape hero.",
+    },
+  ],
+  mood: [
+    {
+      src: "/writing/moodboard-type.webp",
+      alt: "Figma type sheet with Champ for headings and Degular for body.",
+    },
+    {
+      src: "/writing/moodboard-color.webp",
+      alt: "Figma color palette and Neo-Brutalism visual-language references.",
+    },
+    {
+      src: "/writing/moodboard-layout.webp",
+      alt: "Figma visual-language board of bold poster layouts and type-led compositions.",
+    },
+    {
+      src: "/writing/moodboard-language.webp",
+      alt: "Figma visual-language board of stickers, illustration, and Y2K graphic references.",
+    },
+  ],
+  process: [
+    {
+      src: "/hero/composite.webp",
+      alt: "Early hero composition with the 3D character and floating objects.",
+      label: "Hero concept",
+    },
+    {
+      src: "/hero/stripes.webp",
+      alt: "Bold stripe graphic from an animation-led hero idea that did not ship.",
+      label: "Animation miss",
+    },
+    {
+      src: "/about/stickers/five-years.webp",
+      alt: "Holographic five-year experience sticker from the asset experiments.",
+      label: "Stickers",
+    },
+    {
+      src: "/hero/girl.webp",
+      alt: "Custom 3D character developed after Pinterest references and ChatGPT prompts.",
+      label: "3D character",
+    },
+    {
+      src: "/hero/star.webp",
+      alt: "Chrome star object from the final Neo-Y2K visual language.",
+      label: "Final language",
+    },
+  ],
+  cursor: {
+    src: "/hero/girl-work.webp",
+    alt: "The portfolio character in a working pose, standing in for the shift from Figma into Cursor and the browser.",
+  },
+  failures: [
+    {
+      src: "/writing/fail-balloons.webp",
+      alt: "Cursor thread iterating the footer balloon letters: delayed rise, uneven heights, then a hitch while they float to the top edge.",
+    },
+    {
+      src: "/writing/fail-checker.webp",
+      alt: "Cursor thread fixing the About checker: clipped half-squares, side gaps, then leftover white space under the last row.",
+    },
+    {
+      src: "/writing/fail-banners.webp",
+      alt: "Cursor thread removing a banner overlay and smoothing a glitchy settle animation on scroll.",
+    },
+    {
+      src: "/writing/fail-overflow.webp",
+      alt: "Cursor thread fixing horizontal overflow from the banners and leftover space between Favourite work and the footer.",
+    },
+  ],
+  finale: {
+    src: "/hero/composite.webp",
+    alt: "Full hero of the finished portfolio, with the 3D character, charms and the live visual language.",
+  },
+};
+
+export const essayDifferentHref = "/writing/being-different-in-an-ai-world";
+
+export const essayDifferent = {
+  slug: essayDifferentHref,
+  title: "Being Different in an AI World",
+  subtitle:
+    "The easier it becomes to make things, the harder it becomes to make something that feels like you.",
+  meta: "THOUGHT / AI × DESIGN / 2025",
+  description:
+    "Shristi Suman on taste, point of view, and why being a designer in an AI world is less about tools and more about having something personal to say.",
+  author: "Shristi Suman",
+  date: "2025",
+  keywords: [
+    "product design",
+    "AI",
+    "design taste",
+    "point of view",
+    "AI-assisted design",
+  ],
+  thumbnail: {
+    src: "/writing/experiment-different.webp",
+    alt: "A human hand and a robotic hand drawing toward the same point on a blank sheet of paper.",
+  },
+};
+
+export const essays = [essay, essayDifferent];

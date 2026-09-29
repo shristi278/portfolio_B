@@ -6,6 +6,9 @@ import { Layout } from "./Layout";
 import { Material3Study } from "./Material3Study";
 import { GlanceDialog, type GlanceOrigin } from "./GlanceDialog";
 import { About } from "./About";
+import { AiEssay } from "./AiEssay";
+import { DifferentEssay } from "./DifferentEssay";
+import { Experiments } from "./Experiments";
 import { Faq } from "./Faq";
 import { glances, projects, quotes, skills } from "./data";
 import { usePath } from "./nav";
@@ -79,7 +82,7 @@ function GlanceBoard() {
       <ul>
         {glances.map((item, index) => (
           <li key={item.href} className={`glance-item col-${(index % 3) + 1}`}>
-            <article className={`glance-card tone-${index % 3}`}>
+            <article className="glance-card">
               <div className="glance-card-media">
                 <img src={item.image} alt={item.imageAlt} loading="lazy" decoding="async" />
               </div>
@@ -293,13 +296,19 @@ export default function App() {
 
   const onCaseStudy = path === "/work/material-3";
   const onAbout = path === "/about";
+  const onEssay = path === "/writing/portfolio-with-ai";
+  const onDifferent = path === "/writing/being-different-in-an-ai-world";
 
   return (
-    <Layout scrolled={onCaseStudy || onAbout || scrolled}>
+    <Layout scrolled={onCaseStudy || onAbout || onEssay || onDifferent || scrolled}>
       {onCaseStudy ? (
         <Material3Study />
       ) : onAbout ? (
         <About />
+      ) : onEssay ? (
+        <AiEssay />
+      ) : onDifferent ? (
+        <DifferentEssay />
       ) : (
         <main id="top">
         <section className="hero">
@@ -465,6 +474,7 @@ export default function App() {
 
         <GlanceBoard />
 
+        <Experiments />
         <KindWords />
         <Faq />
       </main>
