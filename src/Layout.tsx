@@ -1,9 +1,9 @@
 import { useEffect, useId, useState, type ReactNode } from "react";
-import { ColorPicker } from "./ColorPicker";
-import { CtaLink } from "./CtaLink";
+import { Gramophone } from "./Gramophone";
+// Theme picker kept in ColorPicker.tsx + themes.ts; hidden for now (blue-only).
 import { FooterBalloons } from "./FooterBalloons";
 import { ThemeCursor } from "./ThemeCursor";
-import { resumeUrl, socials } from "./data";
+import { resumeUrl, socials, wallOfPortfoliosUrl } from "./data";
 import { go, usePath } from "./nav";
 
 type Props = {
@@ -139,14 +139,6 @@ export function Layout({ children, scrolled = true }: Props) {
           >
             Resume
           </a>
-          <CtaLink
-            className="cta"
-            href="mailto:shristi278@gmail.com"
-            onClick={closeMenu}
-          >
-            Let’s talk
-            <span aria-hidden="true">→</span>
-          </CtaLink>
         </nav>
       </header>
       {children}
@@ -167,8 +159,8 @@ export function Layout({ children, scrolled = true }: Props) {
                 <img
                   src="/footer/social-gmail.webp"
                   alt=""
-                  width={56}
-                  height={56}
+                  width={40}
+                  height={40}
                   decoding="async"
                 />
               </a>
@@ -181,22 +173,8 @@ export function Layout({ children, scrolled = true }: Props) {
                 <img
                   src="/footer/social-linkedin.webp"
                   alt=""
-                  width={56}
-                  height={56}
-                  decoding="async"
-                />
-              </a>
-              <a
-                href={socials.instagram}
-                target="_blank"
-                rel="noreferrer"
-                aria-label="Instagram"
-              >
-                <img
-                  src="/footer/social-instagram.webp"
-                  alt=""
-                  width={56}
-                  height={56}
+                  width={40}
+                  height={40}
                   decoding="async"
                 />
               </a>
@@ -209,23 +187,31 @@ export function Layout({ children, scrolled = true }: Props) {
                 <img
                   src="/footer/social-x.webp"
                   alt=""
-                  width={56}
-                  height={56}
+                  width={40}
+                  height={40}
+                  decoding="async"
+                />
+              </a>
+              <a
+                className="foot-wop"
+                href={wallOfPortfoliosUrl}
+                target="_blank"
+                rel="noreferrer"
+              >
+                <img
+                  src="/footer/wop-featured.svg"
+                  alt="Featured on Wall of Portfolios"
+                  width={376}
+                  height={176}
                   decoding="async"
                 />
               </a>
             </div>
           </div>
           <div className="foot-bar">
-            <p>Made in India · © {new Date().getFullYear()} shristi_suman</p>
             <p className="foot-made">
-              <span>Made with</span>
-              <span className="foot-made-badges">
-                <img src="/footer/badge-gemini.webp" alt="Gemini" width={44} height={44} decoding="async" />
-                <img src="/footer/badge-gpt.webp" alt="ChatGPT" width={44} height={44} decoding="async" />
-                <img src="/footer/badge-chai.webp" alt="chai" width={44} height={44} decoding="async" />
-                <img src="/footer/badge-heart.webp" alt="heart" width={44} height={44} decoding="async" />
-              </span>
+              Made with, <strong>Cursor</strong>, <strong>ChatGPT</strong>, lots of
+              love and cup of tea.
             </p>
             <div className="foot-links">
               <a
@@ -253,7 +239,7 @@ export function Layout({ children, scrolled = true }: Props) {
           </div>
         </div>
       </footer>
-      <ColorPicker />
+      <Gramophone />
       <ThemeCursor />
     </>
   );

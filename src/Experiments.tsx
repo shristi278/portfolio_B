@@ -359,9 +359,6 @@ export function Experiments() {
             style={placed(livePlaces[index], spots[item.slug], dragging === item.slug)}
           >
             <Fastener kind={index === 0 ? "clip" : "pin"} />
-            <span className="notes-num" aria-hidden="true">
-              {index + 1}
-            </span>
             <a
               className="notes-link"
               href={item.slug}
@@ -378,9 +375,7 @@ export function Experiments() {
             >
               <h3>{item.title}</h3>
               <p>{item.meta}</p>
-              <span className="notes-tap" aria-hidden="true">
-                tap to read
-              </span>
+              <span className="notes-read">Read</span>
             </a>
           </div>
         ))}

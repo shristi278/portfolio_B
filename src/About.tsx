@@ -1,54 +1,24 @@
 import { useEffect, useRef } from "react";
+import { AboutPicks } from "./AboutPicks";
 import { AboutStickers } from "./AboutStickers";
-import { CtaLink } from "./CtaLink";
-import { resumeUrl } from "./data";
-
-const facts = [
-  { label: "Location", value: "Bangalore, India" },
-  { label: "Experience", value: "4.5+ years" },
-  { label: "Currently at", value: "SOTI Inc." },
-  { label: "Previously", value: "Unthinkable, Betterplace" },
-] as const;
-
-const chapters = [
-  {
-    place: "SOTI Inc.",
-    when: "Now · 3 years",
-    note: "Product design on SOTI Snap and MobiControl. Systems, Android, and sitting close to engineering.",
-  },
-  {
-    place: "Unthinkable",
-    when: "Earlier",
-    note: "End-to-end product work including Floom, a platform for new moms, and client experiences like ICAI.",
-  },
-  {
-    place: "Betterplace",
-    when: "Earlier",
-    note: "Where I started shaping digital products in a product team.",
-  },
-] as const;
+import { aboutRibbon, aboutRibbonAlt } from "./data";
 
 function AboutChecker() {
   const bgRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const bg = bgRef.current;
-    const hero = bg?.parentElement;
-    if (!bg || !hero) return;
+    const stage = bg?.closest(".about-stage");
+    if (!bg || !stage) return;
 
     const layout = () => {
-      const w = hero.clientWidth;
-      const h = hero.clientHeight;
+      const w = stage.clientWidth;
+      const h = stage.clientHeight;
       if (w < 2 || h < 2) return;
 
-      const cols = 10;
-      const squareW = w / cols;
-      let rows = Math.round(h / squareW);
-      if (rows < 2) rows = 2;
-      if (rows % 2 === 1) rows += 1;
-
-      const squareH = h / rows;
-      bg.style.backgroundSize = `${squareW * 2}px ${squareH * 2}px`;
+      const cols = 14;
+      const square = w / cols;
+      bg.style.backgroundSize = `${square}px ${square}px`;
       bg.style.inset = "0";
       bg.style.width = "100%";
       bg.style.height = "100%";
@@ -56,11 +26,66 @@ function AboutChecker() {
 
     layout();
     const observer = new ResizeObserver(layout);
-    observer.observe(hero);
+    observer.observe(stage);
     return () => observer.disconnect();
   }, []);
 
   return <div className="about-hero-bg" ref={bgRef} aria-hidden="true" />;
+}
+
+function AboutRibbons() {
+  const sectionRef = useRef<HTMLElement>(null);
+
+  useEffect(() => {
+    const section = sectionRef.current;
+    if (!section) return;
+    const ribbons = [...section.querySelectorAll<HTMLElement>(".about-ribbon")];
+
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      ribbons.forEach((el) => el.classList.add("is-settled"));
+      return;
+    }
+
+    let visible = false;
+    const sync = () => {
+      const box = section.getBoundingClientRect();
+      const shown = Math.min(box.bottom, window.innerHeight) - Math.max(box.top, 0);
+      const ratio = Math.max(0, shown) / Math.max(1, box.height);
+      if (!visible && ratio >= 0.28) {
+        visible = true;
+        ribbons.forEach((el) => el.classList.add("is-settled"));
+      } else if (visible && ratio <= 0.06) {
+        visible = false;
+        ribbons.forEach((el) => el.classList.remove("is-settled"));
+      }
+    };
+
+    let frame = 0;
+    const onScroll = () => {
+      cancelAnimationFrame(frame);
+      frame = requestAnimationFrame(sync);
+    };
+
+    sync();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("resize", onScroll);
+    return () => {
+      cancelAnimationFrame(frame);
+      window.removeEventListener("scroll", onScroll);
+      window.removeEventListener("resize", onScroll);
+    };
+  }, []);
+
+  return (
+    <section className="about-ribbons" ref={sectionRef} aria-label="Announcement">
+      <div className="about-ribbon is-a">
+        <span>{aboutRibbon}</span>
+      </div>
+      <div className="about-ribbon is-b">
+        <span>{aboutRibbonAlt}</span>
+      </div>
+    </section>
+  );
 }
 
 function AboutBadge() {
@@ -226,85 +251,14 @@ export function About() {
 
   return (
     <main className="about" id="top">
-      <header className="about-hero">
+      <div className="about-stage">
         <AboutChecker />
-        <AboutStickers />
-        <AboutBadge />
-      </header>
-
-      <div className="about-inner">
-        <header className="about-intro">
-          <h1>About</h1>
-          <p>
-            I’m Shristi, a product designer in Bangalore. Give me a messy
-            problem, a blank canvas or something that feels like it could be
-            better — I’ll start with why, then put the pieces back together.
-          </p>
-          <p>
-            I’ve spent 4.5+ years on digital products, the last three at SOTI.
-            Most of that work lives in B2B systems with multiple users,
-            workflows and a lot of information to make sense of. The job is
-            making something powerful without making it feel overwhelming.
-          </p>
+        <header className="about-hero">
+          <AboutStickers />
+          <AboutBadge />
         </header>
-
-        <dl className="about-facts">
-          {facts.map((fact) => (
-            <div key={fact.label}>
-              <dt>{fact.label}</dt>
-              <dd>{fact.value}</dd>
-            </div>
-          ))}
-        </dl>
-
-        <section className="about-split">
-          <h2>A little more context</h2>
-          <div className="about-copy">
-            <p>
-              I design flows, interaction, information architecture, visuals,
-              systems and prototypes — usually next to product and engineering.
-              I’m happiest when design has a real seat at the table, not a seat
-              at the end of the process.
-            </p>
-            <p>
-              I’m curious, fairly detail-oriented, and I like exploring more
-              than one direction before settling. If you’re looking for someone
-              who can handle complexity, work collaboratively and still care
-              about the tiny details, we should probably talk.
-            </p>
-          </div>
-        </section>
-
-        <section className="about-split">
-          <h2>Where I’ve been</h2>
-          <ol className="about-chapters">
-            {chapters.map((chapter) => (
-              <li key={chapter.place}>
-                <p className="about-when">{chapter.when}</p>
-                <h3>{chapter.place}</h3>
-                <p>{chapter.note}</p>
-              </li>
-            ))}
-          </ol>
-        </section>
-
-        <div className="about-cta">
-          <CtaLink className="cta cta-lg" href="mailto:shristi278@gmail.com">
-            Let’s talk
-            <span aria-hidden="true">→</span>
-          </CtaLink>
-          <CtaLink className="cta cta-lg" href="/#work">
-            See the work
-          </CtaLink>
-          <CtaLink
-            className="cta cta-lg"
-            href={resumeUrl}
-            target="_blank"
-            rel="noreferrer"
-          >
-            Resume
-          </CtaLink>
-        </div>
+        <AboutRibbons />
+        <AboutPicks />
       </div>
     </main>
   );

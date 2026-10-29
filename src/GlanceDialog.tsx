@@ -124,7 +124,7 @@ function frames(a: Box, b: Box, c: Box): Keyframe[] {
   return [key(a, 0), key(b, 0.58), key(c, 1)];
 }
 
-function CtaIconButton({
+export function CtaIconButton({
   label,
   className,
   buttonRef,
@@ -346,6 +346,7 @@ export function GlanceDialog({
                 muted
                 loop
                 playsInline
+                preload="metadata"
                 controls={false}
                 aria-label={item.imageAlt}
                 style={

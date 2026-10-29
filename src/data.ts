@@ -1,5 +1,8 @@
 export const resumeUrl =
-  "https://drive.google.com/file/d/1upDGlALbQ2gzdtGEZpzHpH524VkU4V7z/view?usp=sharing";
+  "https://drive.google.com/file/d/1SyPKWgaoEXDgMwvE02U8ShsOOfqzU391/view?usp=sharing";
+
+export const portfolioDeckUrl =
+  "https://www.figma.com/deck/N9omChaIMVkCr6oAsMOiTz/shristi_suman_portfolio?node-id=34-113&t=xogtyCspyCnDRyNB-1";
 
 export const socials = {
   email: "mailto:shristi278@gmail.com",
@@ -8,6 +11,8 @@ export const socials = {
   x: "https://x.com/shristydesign",
 } as const;
 
+export const wallOfPortfoliosUrl = "https://www.wallofportfolios.in/";
+
 export type Project = {
   id: string;
   title: string;
@@ -15,6 +20,7 @@ export type Project = {
   blurb?: string;
   tags?: string[];
   href?: string;
+  cta?: string;
   internal?: boolean;
   locked?: boolean;
   image?: string;
@@ -26,37 +32,37 @@ export type Project = {
 export const projects: Project[] = [
   {
     id: "01",
-    metric: "10K → 510K devices in 4 months. Rapid scale-up post launch.",
-    title: "Modernising the Lockdown Feature",
+    title: "Enhancing the Lockdown feature",
     blurb:
-      "Redesigning the Lockdown home screen template experience for Snap, turning administrative friction into seamless device governance.",
+      "Turning Administrative friction into seamless device governance, which scaled from 10K to **510K** enrolled devices.",
     tags: ["SOTI Snap", "Enterprise", "Systems"],
     href: "https://www.figma.com/deck/calSb1vYoF3p7QbqP4OIE4/Lockdown-modernisation?node-id=1-3319",
+    cta: "Password protected · View slides",
     locked: true,
     image: "/work/lockdown-scene.webp",
     imageAlt: "3D mockup of Create lockdown app setup with theme picker and device preview",
   },
   {
     id: "02",
-    metric: "Potential to increase development velocity by 40%",
     title: "From legacy to Material 3",
     blurb:
-      "Reimagined the Android experience after 15 years, from fragmented legacy UI to a unified, scalable system with Material Design 3.",
+      "Redesigning an enterprise device-management experience for greater visibility, clearer workflows and controlled user access.",
     tags: ["Android", "Material 3", "Design system"],
-    href: "/work/material-3",
-    internal: true,
-    locked: false,
-    image: "/work/rack-request-scene.webp",
-    imageAlt: "3D mockup of the Rack request inbox on a phone, with blue scene around the device",
+    href: "https://www.figma.com/deck/B1b3ks7ngxqYMgpdVIJ5hN/Android-revamp?node-id=1-3319&viewport=-111%2C7%2C0.61&t=OOaaMuK5n8oN43RW-1&scaling=min-zoom&content-scaling=fixed&page-id=0%3A1",
+    cta: "Password protected · View slides",
+    internal: false,
+    locked: true,
+    image: "/work/mobicontrol-scene.webp",
+    imageAlt: "3D mockup of the SOTI MobiControl device home screen on a phone, with a blue scene around the device",
   },
   {
     id: "03",
-    metric: "Personal project",
-    title: "Building a Digital Identity for Pet",
+    title: "Digital identity for pets",
     blurb:
       "Designing a pet profile experience that preserves a pet’s personality, routines, health history and milestones while making adoption and breeding more informed and trustworthy.",
-    tags: ["Pet Profiles", "Marketplace", "Community"],
+    tags: ["Side Project", "Marketplace", "Community"],
     href: "https://www.figma.com/deck/eaH4cGZtzzzBsAJRF5HiPi",
+    cta: "View slides",
     locked: false,
     image: "/work/pet-mockup.webp",
     imageAlt: "3D mockup of a pet profile app on a phone, with a golden retriever beside it",
@@ -152,18 +158,18 @@ export const glances: Glance[] = [
 
 export const quotes = [
   {
+    name: "Tanvi Gupta",
+    role: "UX designer III, Google",
+    photo: "/quotes/tanvi.webp",
+    quote:
+      "I really enjoyed mentoring and collaborating with you on the Fimbre project! You did a great job taking ownership of key flows like the user profile and e-commerce experience. I loved seeing your initiative with the app-wide UX audit and your contributions to our design library system. You’ve taken feedback exceptionally well and grown a lot in your UX thinking and design execution. Keep up the great work!",
+  },
+  {
     name: "Manu Kamath",
     role: "Product design manager, SOTI · ex-BookMyShow",
     photo: "/quotes/manu.webp",
     quote:
       "Shristi has quickly become a key contributor, shaping the design of SOTI Snap. She has also become the go-to person for developers, ensuring seamless collaboration between teams. If you think the SOTI Snap UI looks sharper, it’s because Shristi worked closely with our developers to aim for pixel perfection.",
-  },
-  {
-    name: "Deepak Kumar",
-    role: "Lead product manager, SOTI",
-    photo: "/quotes/deepak.webp",
-    quote:
-      "Her commitment, creativity, and meticulous attention to detail have greatly enriched the user experience of the recent features she’s been involved in. She delivers UX with multiple variations, advocates for improvements, and grasps requirements in the first meeting.",
   },
   {
     name: "Eric Lo",

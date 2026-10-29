@@ -115,7 +115,7 @@ const items: { question: string; answer: ReactNode }[] = [
   },
   {
     question: "What’s the easiest way to reach you?",
-    answer: <p>Email works. Coffee works too.</p>,
+    answer: <p>Email works. Tea works too.</p>,
   },
 ];
 
@@ -173,26 +173,30 @@ export function Faq() {
                 key={item.question}
                 className={isOpen ? "wonder-item is-open" : "wonder-item"}
               >
-                <div className="wonder-q-row">
-                  <h3 className="wonder-q">{item.question}</h3>
+                <h3 className="wonder-q-heading">
                   <button
                     type="button"
-                    className="wonder-plus"
-                    aria-label={isOpen ? "Collapse answer" : "Expand answer"}
+                    className="wonder-q-row"
                     aria-expanded={isOpen}
                     aria-controls={answerId}
                     onClick={() =>
                       setOpen((current) => (current === index ? null : index))
                     }
                   >
-                    <PlusIcon />
+                    <span className="wonder-q">{item.question}</span>
+                    <span className="wonder-plus" aria-hidden="true">
+                      <PlusIcon />
+                    </span>
                   </button>
+                </h3>
+                <div
+                  className="wonder-answer"
+                  id={answerId}
+                  role="region"
+                  inert={!isOpen}
+                >
+                  <div className="wonder-answer-inner">{item.answer}</div>
                 </div>
-                {isOpen ? (
-                  <div className="wonder-answer" id={answerId}>
-                    {item.answer}
-                  </div>
-                ) : null}
               </div>
             );
           })}

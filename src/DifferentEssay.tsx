@@ -59,23 +59,10 @@ function EssayToc({ activeId }: { activeId: string }) {
               href={`#${item.id}`}
               aria-current={item.id === activeId ? "location" : undefined}
             >
-              <span className="visually-hidden">
-                {index + 1}. {item.label}
+              <span className="essay-toc-bar" aria-hidden="true" />
+              <span className="essay-toc-tip">
+                <span>{index + 1}.</span> {item.label}
               </span>
-            </a>
-          ))}
-        </div>
-        <div className="essay-toc-panel">
-          <p className="essay-toc-title">On this page</p>
-          {toc.map((item, index) => (
-            <a
-              key={item.id}
-              className={item.id === activeId ? "is-active" : undefined}
-              href={`#${item.id}`}
-              tabIndex={-1}
-              aria-current={item.id === activeId ? "location" : undefined}
-            >
-              <span>{index + 1}.</span> {item.label}
             </a>
           ))}
         </div>

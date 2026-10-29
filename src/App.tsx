@@ -10,8 +10,23 @@ import { AiEssay } from "./AiEssay";
 import { DifferentEssay } from "./DifferentEssay";
 import { Experiments } from "./Experiments";
 import { Faq } from "./Faq";
-import { glances, projects, quotes, skills } from "./data";
+import { glances, portfolioDeckUrl, projects, quotes, skills } from "./data";
 import { usePath } from "./nav";
+
+function BoldMarks({ text }: { text: string }) {
+  const parts = text.split(/(\*\*[^*]+\*\*)/g);
+  return (
+    <>
+      {parts.map((part, index) =>
+        part.startsWith("**") && part.endsWith("**") ? (
+          <strong key={index}>{part.slice(2, -2)}</strong>
+        ) : (
+          part
+        ),
+      )}
+    </>
+  );
+}
 
 function GlanceBoard() {
   const sectionRef = useRef<HTMLElement>(null);
@@ -315,30 +330,41 @@ export default function App() {
           <div className="hero-grid">
             <div className="hero-copy">
               <h1>
-                <span className="line">I make things.</span>
+                <span className="line">Less pixel pushing.</span>
                 <span className="line">
-                  Mostly <span className="accent">interfaces.</span>
+                  More <span className="accent">problem solving.</span>
                 </span>
               </h1>
               <p className="lede">
                 <span className="lede-line">
-                  I’m a product designer. Give me a messy problem, a blank
-                  canvas or something that feels like it could be better.
+                  I’m a Product Designer who thinks in systems, experiments
+                  with technology and builds with AI.
                 </span>
                 <span className="lede-line">
-                  I’ll probably start pulling it apart, asking questions and
-                  putting it back together.
+                  I turn complex problems into useful experiences, connecting
+                  the dots between what people need, what businesses want and
+                  what technology makes possible.
                 </span>
               </p>
-              <CtaLink
-                className="cta cta-lg"
-                href="#work"
-                onMouseEnter={() => setWorkHover(true)}
-                onMouseLeave={() => setWorkHover(false)}
-              >
-                See the work
-                <span aria-hidden="true">→</span>
-              </CtaLink>
+              <div className="hero-actions">
+                <CtaLink
+                  className="cta cta-lg cta-card"
+                  href={portfolioDeckUrl}
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  View portfolio deck
+                </CtaLink>
+                <CtaLink
+                  className="cta cta-lg"
+                  href="#work"
+                  onMouseEnter={() => setWorkHover(true)}
+                  onMouseLeave={() => setWorkHover(false)}
+                >
+                  See the work
+                  <span aria-hidden="true">→</span>
+                </CtaLink>
+              </div>
             </div>
             <FloatingHero workHover={workHover} />
           </div>
@@ -349,7 +375,7 @@ export default function App() {
             </div>
             <div>
               <span>Experience</span>
-              <strong>4.5+ years</strong>
+              <strong>5 years</strong>
             </div>
             <div>
               <span>Currently at</span>
@@ -439,14 +465,20 @@ export default function App() {
                     <p>{project.title}</p>
                   ) : (
                     <>
-                      <p className="metric">{project.metric}</p>
-                      <h3>{project.title}</h3>
-                      <p>{project.blurb}</p>
-                      <div className="tags">
-                        {project.tags?.map((tag) => (
-                          <span key={tag}>{tag}</span>
-                        ))}
+                      {project.metric ? <p className="metric">{project.metric}</p> : null}
+                      <div className="card-heading">
+                        <h3>{project.title}</h3>
+                        {project.tags?.length ? (
+                          <div className="tags">
+                            {project.tags.map((tag) => (
+                              <span key={tag}>{tag}</span>
+                            ))}
+                          </div>
+                        ) : null}
                       </div>
+                      <p>
+                        <BoldMarks text={project.blurb ?? ""} />
+                      </p>
                       <CtaLink
                         className="cta cta-card"
                         href={project.href}
@@ -454,7 +486,10 @@ export default function App() {
                           ? {}
                           : { target: "_blank", rel: "noreferrer" })}
                       >
-                        {project.locked ? "🔒 Password protected · View" : "View case study"}
+                        {project.cta ??
+                          (project.locked
+                            ? "🔒 Password protected · View"
+                            : "View case study")}
                       </CtaLink>
                     </>
                   )}

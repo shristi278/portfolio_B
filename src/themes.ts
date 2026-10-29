@@ -24,7 +24,7 @@ export const THEMES = [
 
 export type ThemeId = (typeof THEMES)[number]["id"];
 
-export const DEFAULT_THEME: ThemeId = "green";
+export const DEFAULT_THEME: ThemeId = "blue";
 export const THEME_STORAGE_KEY = "site-theme-v4";
 
 export function isThemeId(value: string | null): value is ThemeId {

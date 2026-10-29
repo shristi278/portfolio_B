@@ -2,13 +2,11 @@ import { useEffect } from "react";
 import { CtaLink } from "./CtaLink";
 import { projects } from "./data";
 
-const img = (file: string, size = 1024) =>
-  `https://framerusercontent.com/images/${file}.png?scale-down-to=${size}`;
+const img = (file: string) =>
+  `/work/material-3/${file.includes(".") ? file : `${file}.png`}`;
 
 const caseStudies = projects.filter((project) => !project.comingSoon);
-const currentStudy = caseStudies.findIndex(
-  (project) => project.href === "/work/material-3",
-);
+const currentStudy = caseStudies.findIndex((project) => project.id === "02");
 const prevProject = currentStudy > 0 ? caseStudies[currentStudy - 1] : undefined;
 const nextProject =
   currentStudy >= 0 && currentStudy < caseStudies.length - 1
@@ -18,7 +16,6 @@ const nextProject =
 function Figure({
   file,
   alt,
-  size,
   className,
 }: {
   file: string;
@@ -28,7 +25,7 @@ function Figure({
 }) {
   return (
     <figure className={className ?? "study-figure"}>
-      <img src={img(file, size)} alt={alt} loading="lazy" />
+      <img src={img(file)} alt={alt} loading="lazy" />
     </figure>
   );
 }
@@ -62,40 +59,71 @@ export function Material3Study() {
       </header>
 
       <section className="study-meta">
-        <div>
-          <h2>Role</h2>
-          <p>
-            <strong>Led the revamp of Android agents.</strong> Collaborated closely
-            with developers and product managers; partnered with the design system
-            team to introduce new Android-specific components. Worked directly with
-            cross-functional teams to ensure seamless implementation and alignment.
-          </p>
-        </div>
-        <div>
-          <h2>Team</h2>
-          <p>1 product designer · 3 product managers · 7 software engineers</p>
-        </div>
-        <div>
-          <h2>Timeline</h2>
-          <p>2 months</p>
+        <dl className="study-meta-facts">
+          <div>
+            <dt>Role</dt>
+            <dd>Product Designer</dd>
+          </div>
+          <div>
+            <dt>Timeline</dt>
+            <dd>2 months</dd>
+          </div>
+          <div>
+            <dt>Team</dt>
+            <dd>Design, PM, Engineer</dd>
+          </div>
+          <div>
+            <dt>Platform</dt>
+            <dd>Android</dd>
+          </div>
+        </dl>
+        <div className="study-meta-copy">
+          <div>
+            <h2>My role</h2>
+            <p>
+              I led the UX discovery, UI audit, design system exploration and
+              product-level redesign, working closely with engineering to translate
+              the new visual language into a scalable Android experience.
+            </p>
+          </div>
+          <div>
+            <h2>Scope</h2>
+            <p>
+              From individual components and interaction patterns to complete
+              product screens and the underlying design foundation.
+            </p>
+          </div>
         </div>
       </section>
 
       <section className="study-block">
         <h2>Setting the Stage: Why this redesign, and why now?</h2>
+        <h3>15 years of product evolution had left its mark</h3>
         <p>
-          For over a decade, our Android interface quietly served millions, but
-          beneath the surface, cracks were forming. Components were patched
-          together, custom elements tangled with aging Material Design, and icon
-          files hid in scattered folders across projects. With Android claiming 95%
-          of our user base and engineering teams hungry for better workflows, the
-          message was clear: it was time to reset, rebuild, and reimagine.
+          The Android experience had evolved over more than 15 years. New features
+          were added, patterns changed and different parts of the product developed
+          their own visual language.
         </p>
-        <Figure
-          className="study-figure is-chart"
-          file="kbi6cslYifkGX4TzmOiGssxMcI4"
-          alt="User distribution chart showing Android versus iOS"
-        />
+        <p>
+          The result wasn’t one obvious UX problem. It was a collection of smaller
+          inconsistencies that had accumulated over time.
+        </p>
+        <p>
+          Different screens solved similar problems in different ways. Components
+          behaved differently. Visual hierarchy wasn’t always predictable and
+          introducing a new feature often meant figuring out how the existing
+          product wanted to behave.
+        </p>
+        <p>
+          The goal wasn’t simply to make the product look newer.
+        </p>
+        <p className="study-callout">
+          <strong>
+            We needed to create a new foundation that could modernize the
+            experience without losing the familiarity and functionality that
+            existing users depended on.
+          </strong>
+        </p>
         <h3>Challenges</h3>
         <ul className="study-challenges">
           <li>
@@ -172,7 +200,7 @@ export function Material3Study() {
         </ul>
         <Figure
           className="study-figure is-ink"
-          file="4kBUpnsYQqi7hbpbYEB63I8so"
+          file="workshop-notes-white"
           alt="Workshop notes from the MobiControl Android discussion"
           size={2048}
         />
@@ -311,9 +339,8 @@ export function Material3Study() {
         </p>
         <h3>Annotation examples</h3>
         <Figure
-          file="luEeEZB1wHiXRvk6Rqzpcpq7yw"
+          file="figma-theme-annotations"
           alt="Figma annotations mapping Theme Builder colors to Elevate tokens"
-          size={2048}
         />
       </section>
 
@@ -401,15 +428,13 @@ export function Material3Study() {
         </p>
         <Figure
           className="study-figure is-glow"
-          file="zlRFCIX2ooYnpACjVFc6OotmNw"
-          alt="After screens of the Material 3 Android agent"
-          size={2048}
+          file="impact-adoption-light.jpg"
+          alt="Design system adoption rising from 20% to an 85% target, and development velocity from baseline to 40% faster"
         />
         <Figure
           className="study-figure is-glow"
-          file="MXCtqjOZAz1MXQYAy8VBzbBTdmI"
-          alt="Before screens of the Android agent"
-          size={2048}
+          file="impact-consistency-light.jpg"
+          alt="Design consistency score rising from 60% to a 95% target, and platform familiarity from moderate to high"
         />
       </section>
 
@@ -417,9 +442,8 @@ export function Material3Study() {
         <h2>Conclusion — looking forward</h2>
         <Figure
           className="study-figure is-glow"
-          file="ytVnNNmieXwVMD9D3weuv0KapY"
+          file="journey-start-end.jpg"
           alt="Journey from start to system transformation"
-          size={2048}
         />
         <p>
           What began as a conversation about scattered icons and aging components
@@ -428,9 +452,9 @@ export function Material3Study() {
         </p>
         <h3>Key takeaways</h3>
         <Figure
-          file="wzEmA1IRD7ZiWMGoFkkDnNsdI"
+          className="study-figure is-bare"
+          file="key-takeaways-clear.png"
           alt="Four lessons from the Material 3 redesign"
-          size={2048}
         />
         <p>
           Design isn’t just about choosing pretty colors and layouts. It’s

@@ -63,7 +63,7 @@ const DECK: StickerDef[] = [
     x: 86,
     y: 34,
     rot: 6,
-    w: 176,
+    w: 204,
   },
   {
     id: "user-researcher",
@@ -72,7 +72,7 @@ const DECK: StickerDef[] = [
     x: 78,
     y: 54,
     rot: 4,
-    w: 176,
+    w: 168,
   },
   {
     id: "cassette",
@@ -91,7 +91,6 @@ export function AboutStickers() {
   const layerRef = useRef<HTMLDivElement>(null);
   const heldRef = useRef<string | null>(null);
   const peelTimer = useRef(0);
-  const skipClick = useRef(false);
   const topZ = useRef(DECK.length);
   const [pieces, setPieces] = useState<Piece[]>(() =>
     DECK.map((sticker, index) => ({ ...sticker, z: index + 1 })),
@@ -101,6 +100,9 @@ export function AboutStickers() {
   const deckKey = DECK.map(
     (item) => `${item.id}:${item.x}:${item.y}:${item.rot}:${item.w}`,
   ).join("|");
+
+  const [shown, setShown] = useState(false);
+  const [landedIds, setLandedIds] = useState<Record<string, true>>({});
 
   heldRef.current = heldId;
 
@@ -119,6 +121,26 @@ export function AboutStickers() {
       y: ((event.clientY - box.top) / box.height) * 100,
     };
   };
+
+  useEffect(() => {
+    const layer = layerRef.current;
+    if (!layer) return;
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      setShown(true);
+      setLandedIds(Object.fromEntries(DECK.map((item) => [item.id, true])));
+      return;
+    }
+    const io = new IntersectionObserver(
+      ([entry]) => {
+        if (!entry.isIntersecting) return;
+        setShown(true);
+        io.disconnect();
+      },
+      { threshold: 0.18 },
+    );
+    io.observe(layer);
+    return () => io.disconnect();
+  }, []);
 
   useEffect(() => {
     return () => {
@@ -178,6 +200,9 @@ export function AboutStickers() {
 
   const pickUp = (id: string, x: number, y: number) => {
     window.clearTimeout(peelTimer.current);
+    setLandedIds((current) =>
+      current[id] ? current : { ...current, [id]: true },
+    );
     if (heldRef.current && heldRef.current !== id) {
       placeHeld(x, y);
     }
@@ -206,25 +231,18 @@ export function AboutStickers() {
 
     const onPointerDown = (event: PointerEvent) => {
       if (event.button !== 0) return;
-      const target = (event.target as HTMLElement).closest("[data-sticker-id]");
       const { x, y } = coords(event);
-      if (target) {
-        const id = target.getAttribute("data-sticker-id");
-        if (!id) return;
-        event.preventDefault();
-        skipClick.current = true;
-        if (heldRef.current === id) {
-          placeHeld(x, y);
-          return;
-        }
-        pickUp(id, x, y);
-        return;
-      }
       if (heldRef.current) {
         event.preventDefault();
-        skipClick.current = true;
         placeHeld(x, y);
+        return;
       }
+      const target = (event.target as HTMLElement).closest("[data-sticker-id]");
+      if (!target) return;
+      const id = target.getAttribute("data-sticker-id");
+      if (!id) return;
+      event.preventDefault();
+      pickUp(id, x, y);
     };
 
     layer.addEventListener("pointerdown", onPointerDown);
@@ -248,7 +266,7 @@ export function AboutStickers() {
             key={piece.id}
             type="button"
             data-sticker-id={piece.id}
-            className={`about-sticker${carrying ? " is-held" : ""}${peeling ? " is-peeling" : ""}`}
+            className={`about-sticker${shown ? " is-in" : ""}${landedIds[piece.id] ? " is-landed" : ""}${carrying ? " is-held" : ""}${peeling ? " is-peeling" : ""}`}
             style={{
               left: `${piece.x}%`,
               top: `${piece.y}%`,
@@ -256,7 +274,14 @@ export function AboutStickers() {
               zIndex: carrying || peeling ? 80 : piece.z,
               "--sticker-rot": `${piece.rot}deg`,
               "--shine-delay": `${index * 0.45}s`,
+              "--sticker-in-delay": `${index * 0.16}s`,
             } as CSSProperties}
+            onAnimationEnd={(event) => {
+              if (event.animationName !== "about-sticker-in") return;
+              setLandedIds((current) =>
+                current[piece.id] ? current : { ...current, [piece.id]: true },
+              );
+            }}
             aria-label={
               carrying
                 ? `${def.alt}. Tap the board to stick it.`
